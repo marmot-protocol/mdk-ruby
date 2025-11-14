@@ -1,6 +1,9 @@
+> [!NOTE]  
+> This is a generic documentation, to read Ruby specific docs [click here](docs.md).
+
 # MDK Bindings
 
-Language bindings for the *Marmot Development Kit* - bringing decentralized, encrypted group messaging to your favorite language.
+Language bindings for the *Marmot Development Kit* - bringing decentralized, encrypted group messaging to your favorite language. 
 
 ## What is MDK?
 
