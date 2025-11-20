@@ -222,6 +222,54 @@ end
     end
   end
 
+  # The Record type GroupImageUpload.
+
+  def self.check_lower_TypeGroupImageUpload(v)
+    
+    
+    
+    
+    
+    
+    
+    
+    RustBuffer.check_lower_OptionalTypeImageDimensions(v.dimensions)
+    RustBuffer.check_lower_Optionalstring(v.blurhash)
+  end
+
+  def self.alloc_from_TypeGroupImageUpload(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeGroupImageUpload(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeGroupImageUpload
+    consumeWithStream do |stream|
+      return stream.readTypeGroupImageUpload
+    end
+  end
+
+  # The Record type ImageDimensions.
+
+  def self.check_lower_TypeImageDimensions(v)
+    
+    
+  end
+
+  def self.alloc_from_TypeImageDimensions(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeImageDimensions(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeImageDimensions
+    consumeWithStream do |stream|
+      return stream.readTypeImageDimensions
+    end
+  end
+
   # The Record type KeyPackageResult.
 
   def self.check_lower_TypeKeyPackageResult(v)
@@ -245,6 +293,8 @@ end
   # The Record type Message.
 
   def self.check_lower_TypeMessage(v)
+    
+    
     
     
     
@@ -425,6 +475,27 @@ end
     end
   end
 
+  # The Optional<T> type for TypeImageDimensions.
+
+  def self.check_lower_OptionalTypeImageDimensions(v)
+    if not v.nil?
+      RustBuffer.check_lower_TypeImageDimensions(v)
+    end
+  end
+
+  def self.alloc_from_OptionalTypeImageDimensions(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_OptionalTypeImageDimensions(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoOptionalTypeImageDimensions
+    consumeWithStream do |stream|
+      return stream.readOptionalTypeImageDimensions
+    end
+  end
+
   # The Optional<T> type for TypeMessage.
 
   def self.check_lower_OptionalTypeMessage(v)
@@ -443,6 +514,27 @@ end
   def consumeIntoOptionalTypeMessage
     consumeWithStream do |stream|
       return stream.readOptionalTypeMessage
+    end
+  end
+
+  # The Optional<T> type for TypeWelcome.
+
+  def self.check_lower_OptionalTypeWelcome(v)
+    if not v.nil?
+      RustBuffer.check_lower_TypeWelcome(v)
+    end
+  end
+
+  def self.alloc_from_OptionalTypeWelcome(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_OptionalTypeWelcome(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoOptionalTypeWelcome
+    consumeWithStream do |stream|
+      return stream.readOptionalTypeWelcome
     end
   end
 
@@ -726,6 +818,32 @@ class RustBufferStream
     )
   end
 
+  # The Record type GroupImageUpload.
+
+  def readTypeGroupImageUpload
+    GroupImageUpload.new(
+      encrypted_data: readBytes,
+      encrypted_hash: readBytes,
+      image_key: readBytes,
+      image_nonce: readBytes,
+      upload_secret_key: readString,
+      original_size: readU64,
+      encrypted_size: readU64,
+      mime_type: readString,
+      dimensions: readOptionalTypeImageDimensions,
+      blurhash: readOptionalstring
+    )
+  end
+
+  # The Record type ImageDimensions.
+
+  def readTypeImageDimensions
+    ImageDimensions.new(
+      width: readU32,
+      height: readU32
+    )
+  end
+
   # The Record type KeyPackageResult.
 
   def readTypeKeyPackageResult
@@ -743,8 +861,10 @@ class RustBufferStream
       mls_group_id: readString,
       nostr_group_id: readString,
       event_id: readString,
+      sender_pubkey: readString,
       event_json: readString,
       processed_at: readU64,
+      kind: readU16,
       state: readString
     )
   end
@@ -893,6 +1013,20 @@ class RustBufferStream
     end
   end
 
+  # The Optional<T> type for TypeImageDimensions.
+
+  def readOptionalTypeImageDimensions
+    flag = unpack_from 1, 'c'
+
+    if flag == 0
+      return nil
+    elsif flag == 1
+      return readTypeImageDimensions
+    else
+      raise InternalError, 'Unexpected flag byte for OptionalTypeImageDimensions'
+    end
+  end
+
   # The Optional<T> type for TypeMessage.
 
   def readOptionalTypeMessage
@@ -904,6 +1038,20 @@ class RustBufferStream
       return readTypeMessage
     else
       raise InternalError, 'Unexpected flag byte for OptionalTypeMessage'
+    end
+  end
+
+  # The Optional<T> type for TypeWelcome.
+
+  def readOptionalTypeWelcome
+    flag = unpack_from 1, 'c'
+
+    if flag == 0
+      return nil
+    elsif flag == 1
+      return readTypeWelcome
+    else
+      raise InternalError, 'Unexpected flag byte for OptionalTypeWelcome'
     end
   end
 
@@ -1139,6 +1287,28 @@ class RustBufferBuilder
     self.write_OptionalSequencestring(v.admins)
   end
 
+  # The Record type GroupImageUpload.
+
+  def write_TypeGroupImageUpload(v)
+    self.write_Bytes(v.encrypted_data)
+    self.write_Bytes(v.encrypted_hash)
+    self.write_Bytes(v.image_key)
+    self.write_Bytes(v.image_nonce)
+    self.write_String(v.upload_secret_key)
+    self.write_U64(v.original_size)
+    self.write_U64(v.encrypted_size)
+    self.write_String(v.mime_type)
+    self.write_OptionalTypeImageDimensions(v.dimensions)
+    self.write_Optionalstring(v.blurhash)
+  end
+
+  # The Record type ImageDimensions.
+
+  def write_TypeImageDimensions(v)
+    self.write_U32(v.width)
+    self.write_U32(v.height)
+  end
+
   # The Record type KeyPackageResult.
 
   def write_TypeKeyPackageResult(v)
@@ -1153,8 +1323,10 @@ class RustBufferBuilder
     self.write_String(v.mls_group_id)
     self.write_String(v.nostr_group_id)
     self.write_String(v.event_id)
+    self.write_String(v.sender_pubkey)
     self.write_String(v.event_json)
     self.write_U64(v.processed_at)
+    self.write_U16(v.kind)
     self.write_String(v.state)
   end
 
@@ -1250,6 +1422,17 @@ class RustBufferBuilder
     end
   end
 
+  # The Optional<T> type for TypeImageDimensions.
+
+  def write_OptionalTypeImageDimensions(v)
+    if v.nil?
+      pack_into(1, 'c', 0)
+    else
+      pack_into(1, 'c', 1)
+      self.write_TypeImageDimensions(v)
+    end
+  end
+
   # The Optional<T> type for TypeMessage.
 
   def write_OptionalTypeMessage(v)
@@ -1258,6 +1441,17 @@ class RustBufferBuilder
     else
       pack_into(1, 'c', 1)
       self.write_TypeMessage(v)
+    end
+  end
+
+  # The Optional<T> type for TypeWelcome.
+
+  def write_OptionalTypeWelcome(v)
+    if v.nil?
+      pack_into(1, 'c', 0)
+    else
+      pack_into(1, 'c', 1)
+      self.write_TypeWelcome(v)
     end
   end
 
@@ -1545,6 +1739,9 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_relays,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_welcome,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_leave_group,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
@@ -1566,12 +1763,24 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_self_update,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_sync_group_metadata_from_mls,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    :void
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_update_group_data,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_func_decrypt_group_image,
+    [RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_func_derive_upload_keypair,
+    [RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_func_new_mdk,
     [RustBuffer.by_value, RustCallStatus.by_ref],
     :uint64
+  attach_function :uniffi_mdk_uniffi_fn_func_prepare_group_image_for_upload,
+    [RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
   attach_function :ffi_mdk_uniffi_rustbuffer_alloc,
     [:uint64, RustCallStatus.by_ref],
     RustBuffer.by_value
@@ -1584,7 +1793,16 @@ module UniFFILib
   attach_function :ffi_mdk_uniffi_rustbuffer_reserve,
     [RustBuffer.by_value, :uint64, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_checksum_func_decrypt_group_image,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_func_derive_upload_keypair,
+    [RustCallStatus.by_ref],
+    :uint16
   attach_function :uniffi_mdk_uniffi_checksum_func_new_mdk,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_func_prepare_group_image_for_upload,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_accept_welcome,
@@ -1626,6 +1844,9 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_relays,
     [RustCallStatus.by_ref],
     :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_welcome,
+    [RustCallStatus.by_ref],
+    :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_leave_group,
     [RustCallStatus.by_ref],
     :uint16
@@ -1645,6 +1866,9 @@ module UniFFILib
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_self_update,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_sync_group_metadata_from_mls,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_update_group_data,
@@ -2067,6 +2291,80 @@ class GroupDataUpdate
   end
 end
   
+  # Record type GroupImageUpload
+class GroupImageUpload
+  attr_reader :encrypted_data, :encrypted_hash, :image_key, :image_nonce, :upload_secret_key, :original_size, :encrypted_size, :mime_type, :dimensions, :blurhash
+
+  def initialize(encrypted_data:, encrypted_hash:, image_key:, image_nonce:, upload_secret_key:, original_size:, encrypted_size:, mime_type:, dimensions:, blurhash:)
+    @encrypted_data = encrypted_data
+    @encrypted_hash = encrypted_hash
+    @image_key = image_key
+    @image_nonce = image_nonce
+    @upload_secret_key = upload_secret_key
+    @original_size = original_size
+    @encrypted_size = encrypted_size
+    @mime_type = mime_type
+    @dimensions = dimensions
+    @blurhash = blurhash
+  end
+
+  def ==(other)
+    if @encrypted_data != other.encrypted_data
+      return false
+    end
+    if @encrypted_hash != other.encrypted_hash
+      return false
+    end
+    if @image_key != other.image_key
+      return false
+    end
+    if @image_nonce != other.image_nonce
+      return false
+    end
+    if @upload_secret_key != other.upload_secret_key
+      return false
+    end
+    if @original_size != other.original_size
+      return false
+    end
+    if @encrypted_size != other.encrypted_size
+      return false
+    end
+    if @mime_type != other.mime_type
+      return false
+    end
+    if @dimensions != other.dimensions
+      return false
+    end
+    if @blurhash != other.blurhash
+      return false
+    end
+
+    true
+  end
+end
+  
+  # Record type ImageDimensions
+class ImageDimensions
+  attr_reader :width, :height
+
+  def initialize(width:, height:)
+    @width = width
+    @height = height
+  end
+
+  def ==(other)
+    if @width != other.width
+      return false
+    end
+    if @height != other.height
+      return false
+    end
+
+    true
+  end
+end
+  
   # Record type KeyPackageResult
 class KeyPackageResult
   attr_reader :key_package, :tags
@@ -2090,15 +2388,17 @@ end
   
   # Record type Message
 class Message
-  attr_reader :id, :mls_group_id, :nostr_group_id, :event_id, :event_json, :processed_at, :state
+  attr_reader :id, :mls_group_id, :nostr_group_id, :event_id, :sender_pubkey, :event_json, :processed_at, :kind, :state
 
-  def initialize(id:, mls_group_id:, nostr_group_id:, event_id:, event_json:, processed_at:, state:)
+  def initialize(id:, mls_group_id:, nostr_group_id:, event_id:, sender_pubkey:, event_json:, processed_at:, kind:, state:)
     @id = id
     @mls_group_id = mls_group_id
     @nostr_group_id = nostr_group_id
     @event_id = event_id
+    @sender_pubkey = sender_pubkey
     @event_json = event_json
     @processed_at = processed_at
+    @kind = kind
     @state = state
   end
 
@@ -2115,10 +2415,16 @@ class Message
     if @event_id != other.event_id
       return false
     end
+    if @sender_pubkey != other.sender_pubkey
+      return false
+    end
     if @event_json != other.event_json
       return false
     end
     if @processed_at != other.processed_at
+      return false
+    end
+    if @kind != other.kind
       return false
     end
     if @state != other.state
@@ -2206,12 +2512,57 @@ end
   
   
 
+def self.decrypt_group_image(encrypted_data, image_key, image_nonce)
+    encrypted_data = MdkUniffi::uniffi_bytes(encrypted_data)
+    
+    
+    image_key = MdkUniffi::uniffi_bytes(image_key)
+    
+    
+    image_nonce = MdkUniffi::uniffi_bytes(image_nonce)
+    
+    
+  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_decrypt_group_image,RustBuffer.allocFromBytes(encrypted_data),RustBuffer.allocFromBytes(image_key),RustBuffer.allocFromBytes(image_nonce))
+  return result.consumeIntoBytes
+end
+
+
+  
+  
+
+def self.derive_upload_keypair(image_key)
+    image_key = MdkUniffi::uniffi_bytes(image_key)
+    
+    
+  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_derive_upload_keypair,RustBuffer.allocFromBytes(image_key))
+  return result.consumeIntoString
+end
+
+
+  
+  
+
 def self.new_mdk(db_path)
     db_path = MdkUniffi::uniffi_utf8(db_path)
     
     
   result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_new_mdk,RustBuffer.allocFromString(db_path))
   return Mdk.uniffi_allocate(result)
+end
+
+
+  
+  
+
+def self.prepare_group_image_for_upload(image_data, mime_type)
+    image_data = MdkUniffi::uniffi_bytes(image_data)
+    
+    
+    mime_type = MdkUniffi::uniffi_utf8(mime_type)
+    
+    
+  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_prepare_group_image_for_upload,RustBuffer.allocFromBytes(image_data),RustBuffer.allocFromString(mime_type))
+  return result.consumeIntoTypeGroupImageUpload
 end
 
 
@@ -2357,6 +2708,12 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_relays,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
     return result.consumeIntoSequencestring
   end
+  def get_welcome(event_id)
+        event_id = MdkUniffi::uniffi_utf8(event_id)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_welcome,uniffi_clone_handle(),RustBuffer.allocFromString(event_id))
+    return result.consumeIntoOptionalTypeWelcome
+  end
   def leave_group(mls_group_id)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
         
@@ -2403,6 +2760,12 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_self_update,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
     return result.consumeIntoTypeAddMembersResult
   end
+  def sync_group_metadata_from_mls(mls_group_id)
+        mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
+        
+      MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_sync_group_metadata_from_mls,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
+  end
+  
   def update_group_data(mls_group_id, update)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
         
