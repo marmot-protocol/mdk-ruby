@@ -126,27 +126,6 @@ end
     end
   end
 
-  # The Record type AddMembersResult.
-
-  def self.check_lower_TypeAddMembersResult(v)
-    
-    RustBuffer.check_lower_OptionalSequencestring(v.welcome_rumors_json)
-    
-  end
-
-  def self.alloc_from_TypeAddMembersResult(v)
-    RustBuffer.allocWithBuilder do |builder|
-      builder.write_TypeAddMembersResult(v)
-      return builder.finalize
-    end
-  end
-
-  def consumeIntoTypeAddMembersResult
-    consumeWithStream do |stream|
-      return stream.readTypeAddMembersResult
-    end
-  end
-
   # The Record type CreateGroupResult.
 
   def self.check_lower_TypeCreateGroupResult(v)
@@ -317,6 +296,27 @@ end
     end
   end
 
+  # The Record type UpdateGroupResult.
+
+  def self.check_lower_TypeUpdateGroupResult(v)
+    
+    RustBuffer.check_lower_OptionalSequencestring(v.welcome_rumors_json)
+    
+  end
+
+  def self.alloc_from_TypeUpdateGroupResult(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeUpdateGroupResult(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeUpdateGroupResult
+    consumeWithStream do |stream|
+      return stream.readTypeUpdateGroupResult
+    end
+  end
+
   # The Record type Welcome.
 
   def self.check_lower_TypeWelcome(v)
@@ -360,7 +360,7 @@ end
       return
     end
     if v.proposal?
-        RustBuffer.check_lower_TypeAddMembersResult(v.result)
+        RustBuffer.check_lower_TypeUpdateGroupResult(v.result)
       return
     end
     if v.external_join_proposal?
@@ -580,6 +580,27 @@ end
     end
   end
 
+  # The Optional<T> type for SequenceSequencestring.
+
+  def self.check_lower_OptionalSequenceSequencestring(v)
+    if not v.nil?
+      RustBuffer.check_lower_SequenceSequencestring(v)
+    end
+  end
+
+  def self.alloc_from_OptionalSequenceSequencestring(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_OptionalSequenceSequencestring(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoOptionalSequenceSequencestring
+    consumeWithStream do |stream|
+      return stream.readOptionalSequenceSequencestring
+    end
+  end
+
   # The Sequence<T> type for string.
 
   def self.check_lower_Sequencestring(v)
@@ -766,16 +787,6 @@ class RustBufferStream
     return Mdk.uniffi_allocate(handle)
   end
 
-  # The Record type AddMembersResult.
-
-  def readTypeAddMembersResult
-    AddMembersResult.new(
-      evolution_event_json: readString,
-      welcome_rumors_json: readOptionalSequencestring,
-      mls_group_id: readString
-    )
-  end
-
   # The Record type CreateGroupResult.
 
   def readTypeCreateGroupResult
@@ -869,6 +880,16 @@ class RustBufferStream
     )
   end
 
+  # The Record type UpdateGroupResult.
+
+  def readTypeUpdateGroupResult
+    UpdateGroupResult.new(
+      evolution_event_json: readString,
+      welcome_rumors_json: readOptionalSequencestring,
+      mls_group_id: readString
+    )
+  end
+
   # The Record type Welcome.
 
   def readTypeWelcome
@@ -934,7 +955,7 @@ class RustBufferStream
     end
     if variant == 2
         return ProcessMessageResult::PROPOSAL.new(
-            self.readTypeAddMembersResult()
+            self.readTypeUpdateGroupResult()
         )
     end
     if variant == 3
@@ -1080,6 +1101,20 @@ class RustBufferStream
       return readSequencestring
     else
       raise InternalError, 'Unexpected flag byte for OptionalSequencestring'
+    end
+  end
+
+  # The Optional<T> type for SequenceSequencestring.
+
+  def readOptionalSequenceSequencestring
+    flag = unpack_from 1, 'c'
+
+    if flag == 0
+      return nil
+    elsif flag == 1
+      return readSequenceSequencestring
+    else
+      raise InternalError, 'Unexpected flag byte for OptionalSequenceSequencestring'
     end
   end
 
@@ -1243,14 +1278,6 @@ class RustBufferBuilder
     pack_into(8, 'Q>', handle)
   end
 
-  # The Record type AddMembersResult.
-
-  def write_TypeAddMembersResult(v)
-    self.write_String(v.evolution_event_json)
-    self.write_OptionalSequencestring(v.welcome_rumors_json)
-    self.write_String(v.mls_group_id)
-  end
-
   # The Record type CreateGroupResult.
 
   def write_TypeCreateGroupResult(v)
@@ -1330,6 +1357,14 @@ class RustBufferBuilder
     self.write_String(v.state)
   end
 
+  # The Record type UpdateGroupResult.
+
+  def write_TypeUpdateGroupResult(v)
+    self.write_String(v.evolution_event_json)
+    self.write_OptionalSequencestring(v.welcome_rumors_json)
+    self.write_String(v.mls_group_id)
+  end
+
   # The Record type Welcome.
 
   def write_TypeWelcome(v)
@@ -1361,7 +1396,7 @@ class RustBufferBuilder
     end
     if v.proposal?
       pack_into(4, 'l>', 2)
-      self.write_TypeAddMembersResult(v.result)
+      self.write_TypeUpdateGroupResult(v.result)
     end
     if v.external_join_proposal?
       pack_into(4, 'l>', 3)
@@ -1474,6 +1509,17 @@ class RustBufferBuilder
     else
       pack_into(1, 'c', 1)
       self.write_Sequencestring(v)
+    end
+  end
+
+  # The Optional<T> type for SequenceSequencestring.
+
+  def write_OptionalSequenceSequencestring(v)
+    if v.nil?
+      pack_into(1, 'c', 0)
+    else
+      pack_into(1, 'c', 1)
+      self.write_SequenceSequencestring(v)
     end
   end
 
@@ -1713,7 +1759,7 @@ module UniFFILib
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_message,
-    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, :uint16, RustCallStatus.by_ref],
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, :uint16, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_decline_welcome,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
@@ -1750,7 +1796,7 @@ module UniFFILib
     :void
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_parse_key_package,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
-    :void
+    RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_process_message,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
@@ -2143,31 +2189,6 @@ end
 
 
   
-  # Record type AddMembersResult
-class AddMembersResult
-  attr_reader :evolution_event_json, :welcome_rumors_json, :mls_group_id
-
-  def initialize(evolution_event_json:, welcome_rumors_json:, mls_group_id:)
-    @evolution_event_json = evolution_event_json
-    @welcome_rumors_json = welcome_rumors_json
-    @mls_group_id = mls_group_id
-  end
-
-  def ==(other)
-    if @evolution_event_json != other.evolution_event_json
-      return false
-    end
-    if @welcome_rumors_json != other.welcome_rumors_json
-      return false
-    end
-    if @mls_group_id != other.mls_group_id
-      return false
-    end
-
-    true
-  end
-end
-  
   # Record type CreateGroupResult
 class CreateGroupResult
   attr_reader :group, :welcome_rumors_json
@@ -2435,6 +2456,31 @@ class Message
   end
 end
   
+  # Record type UpdateGroupResult
+class UpdateGroupResult
+  attr_reader :evolution_event_json, :welcome_rumors_json, :mls_group_id
+
+  def initialize(evolution_event_json:, welcome_rumors_json:, mls_group_id:)
+    @evolution_event_json = evolution_event_json
+    @welcome_rumors_json = welcome_rumors_json
+    @mls_group_id = mls_group_id
+  end
+
+  def ==(other)
+    if @evolution_event_json != other.evolution_event_json
+      return false
+    end
+    if @welcome_rumors_json != other.welcome_rumors_json
+      return false
+    end
+    if @mls_group_id != other.mls_group_id
+      return false
+    end
+
+    true
+  end
+end
+  
   # Record type Welcome
 class Welcome
   attr_reader :id, :event_json, :mls_group_id, :nostr_group_id, :group_name, :group_description, :group_image_hash, :group_image_key, :group_image_nonce, :group_admin_pubkeys, :group_relays, :welcomer, :member_count, :state, :wrapper_event_id
@@ -2626,7 +2672,7 @@ end
         key_package_events_json = key_package_events_json.map { |v| MdkUniffi::uniffi_utf8(v) }
         RustBuffer.check_lower_Sequencestring(key_package_events_json)
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_add_members,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_Sequencestring(key_package_events_json))
-    return result.consumeIntoTypeAddMembersResult
+    return result.consumeIntoTypeUpdateGroupResult
   end
   def create_group(creator_public_key, member_key_package_events_json, name, description, relays, admins)
         creator_public_key = MdkUniffi::uniffi_utf8(creator_public_key)
@@ -2652,7 +2698,7 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_key_package_for_event,uniffi_clone_handle(),RustBuffer.allocFromString(public_key),RustBuffer.alloc_from_Sequencestring(relays))
     return result.consumeIntoTypeKeyPackageResult
   end
-  def create_message(mls_group_id, sender_public_key, content, kind)
+  def create_message(mls_group_id, sender_public_key, content, kind, tags)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
         
         sender_public_key = MdkUniffi::uniffi_utf8(sender_public_key)
@@ -2661,7 +2707,9 @@ end
         
         kind = MdkUniffi::uniffi_in_range(kind, "u16", 0, 2**16)
         
-    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_message,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.allocFromString(sender_public_key),RustBuffer.allocFromString(content),kind)
+        tags = (tags ? tags.map { |v| v.map { |v| MdkUniffi::uniffi_utf8(v) } } : nil)
+        RustBuffer.check_lower_OptionalSequenceSequencestring(tags)
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_message,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.allocFromString(sender_public_key),RustBuffer.allocFromString(content),kind,RustBuffer.alloc_from_OptionalSequenceSequencestring(tags))
     return result.consumeIntoString
   end
   def decline_welcome(welcome_json)
@@ -2718,7 +2766,7 @@ end
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
         
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_leave_group,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
-    return result.consumeIntoTypeAddMembersResult
+    return result.consumeIntoTypeUpdateGroupResult
   end
   def merge_pending_commit(mls_group_id)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
@@ -2729,9 +2777,9 @@ end
   def parse_key_package(event_json)
         event_json = MdkUniffi::uniffi_utf8(event_json)
         
-      MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_parse_key_package,uniffi_clone_handle(),RustBuffer.allocFromString(event_json))
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_parse_key_package,uniffi_clone_handle(),RustBuffer.allocFromString(event_json))
+    return result.consumeIntoString
   end
-  
   def process_message(event_json)
         event_json = MdkUniffi::uniffi_utf8(event_json)
         
@@ -2752,13 +2800,13 @@ end
         member_public_keys = member_public_keys.map { |v| MdkUniffi::uniffi_utf8(v) }
         RustBuffer.check_lower_Sequencestring(member_public_keys)
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_remove_members,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_Sequencestring(member_public_keys))
-    return result.consumeIntoTypeAddMembersResult
+    return result.consumeIntoTypeUpdateGroupResult
   end
   def self_update(mls_group_id)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
         
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_self_update,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
-    return result.consumeIntoTypeAddMembersResult
+    return result.consumeIntoTypeUpdateGroupResult
   end
   def sync_group_metadata_from_mls(mls_group_id)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
@@ -2772,7 +2820,7 @@ end
         update = update
         RustBuffer.check_lower_TypeGroupDataUpdate(update)
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_update_group_data,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_TypeGroupDataUpdate(update))
-    return result.consumeIntoTypeAddMembersResult
+    return result.consumeIntoTypeUpdateGroupResult
   end
   
 end
