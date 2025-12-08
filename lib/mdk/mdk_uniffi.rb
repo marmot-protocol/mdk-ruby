@@ -1819,7 +1819,7 @@ module UniFFILib
     [RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_func_derive_upload_keypair,
-    [RustBuffer.by_value, RustCallStatus.by_ref],
+    [RustBuffer.by_value, :uint16, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_func_new_mdk,
     [RustBuffer.by_value, RustCallStatus.by_ref],
@@ -2576,11 +2576,14 @@ end
   
   
 
-def self.derive_upload_keypair(image_key)
+def self.derive_upload_keypair(image_key, version)
     image_key = MdkUniffi::uniffi_bytes(image_key)
     
     
-  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_derive_upload_keypair,RustBuffer.allocFromBytes(image_key))
+    version = MdkUniffi::uniffi_in_range(version, "u16", 0, 2**16)
+    
+    
+  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_derive_upload_keypair,RustBuffer.allocFromBytes(image_key),version)
   return result.consumeIntoString
 end
 
