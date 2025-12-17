@@ -1749,6 +1749,9 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_accept_welcome,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     :void
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_accept_welcome_json,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    :void
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_add_members,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
@@ -1762,6 +1765,9 @@ module UniFFILib
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, :uint16, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_decline_welcome,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    :void
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_decline_welcome_json,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     :void
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_group,
@@ -1854,6 +1860,9 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_accept_welcome,
     [RustCallStatus.by_ref],
     :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_accept_welcome_json,
+    [RustCallStatus.by_ref],
+    :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_add_members,
     [RustCallStatus.by_ref],
     :uint16
@@ -1867,6 +1876,9 @@ module UniFFILib
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_decline_welcome,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_decline_welcome_json,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_group,
@@ -2663,10 +2675,16 @@ end
 
   
 
-  def accept_welcome(welcome_json)
+  def accept_welcome(welcome)
+        welcome = welcome
+        RustBuffer.check_lower_TypeWelcome(welcome)
+      MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_accept_welcome,uniffi_clone_handle(),RustBuffer.alloc_from_TypeWelcome(welcome))
+  end
+  
+  def accept_welcome_json(welcome_json)
         welcome_json = MdkUniffi::uniffi_utf8(welcome_json)
         
-      MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_accept_welcome,uniffi_clone_handle(),RustBuffer.allocFromString(welcome_json))
+      MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_accept_welcome_json,uniffi_clone_handle(),RustBuffer.allocFromString(welcome_json))
   end
   
   def add_members(mls_group_id, key_package_events_json)
@@ -2715,10 +2733,16 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_message,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.allocFromString(sender_public_key),RustBuffer.allocFromString(content),kind,RustBuffer.alloc_from_OptionalSequenceSequencestring(tags))
     return result.consumeIntoString
   end
-  def decline_welcome(welcome_json)
+  def decline_welcome(welcome)
+        welcome = welcome
+        RustBuffer.check_lower_TypeWelcome(welcome)
+      MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_decline_welcome,uniffi_clone_handle(),RustBuffer.alloc_from_TypeWelcome(welcome))
+  end
+  
+  def decline_welcome_json(welcome_json)
         welcome_json = MdkUniffi::uniffi_utf8(welcome_json)
         
-      MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_decline_welcome,uniffi_clone_handle(),RustBuffer.allocFromString(welcome_json))
+      MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_decline_welcome_json,uniffi_clone_handle(),RustBuffer.allocFromString(welcome_json))
   end
   
   def get_group(mls_group_id)
