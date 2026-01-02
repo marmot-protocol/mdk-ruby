@@ -1822,7 +1822,7 @@ module UniFFILib
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_func_decrypt_group_image,
-    [RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    [RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_func_derive_upload_keypair,
     [RustBuffer.by_value, :uint16, RustCallStatus.by_ref],
@@ -2570,9 +2570,12 @@ end
   
   
 
-def self.decrypt_group_image(encrypted_data, image_key, image_nonce)
+def self.decrypt_group_image(encrypted_data, expected_hash, image_key, image_nonce)
     encrypted_data = MdkUniffi::uniffi_bytes(encrypted_data)
     
+    
+    expected_hash = (expected_hash ? MdkUniffi::uniffi_bytes(expected_hash) : nil)
+    RustBuffer.check_lower_Optionalbytes(expected_hash)
     
     image_key = MdkUniffi::uniffi_bytes(image_key)
     
@@ -2580,7 +2583,7 @@ def self.decrypt_group_image(encrypted_data, image_key, image_nonce)
     image_nonce = MdkUniffi::uniffi_bytes(image_nonce)
     
     
-  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_decrypt_group_image,RustBuffer.allocFromBytes(encrypted_data),RustBuffer.allocFromBytes(image_key),RustBuffer.allocFromBytes(image_nonce))
+  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_decrypt_group_image,RustBuffer.allocFromBytes(encrypted_data),RustBuffer.alloc_from_Optionalbytes(expected_hash),RustBuffer.allocFromBytes(image_key),RustBuffer.allocFromBytes(image_nonce))
   return result.consumeIntoBytes
 end
 
