@@ -391,6 +391,27 @@ end
   end
   
 
+  # The Optional<T> type for u32.
+
+  def self.check_lower_Optionalu32(v)
+    if not v.nil?
+      
+    end
+  end
+
+  def self.alloc_from_Optionalu32(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_Optionalu32(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoOptionalu32
+    consumeWithStream do |stream|
+      return stream.readOptionalu32
+    end
+  end
+
   # The Optional<T> type for u64.
 
   def self.check_lower_Optionalu64(v)
@@ -978,6 +999,20 @@ class RustBufferStream
 
   
 
+  # The Optional<T> type for u32.
+
+  def readOptionalu32
+    flag = unpack_from 1, 'c'
+
+    if flag == 0
+      return nil
+    elsif flag == 1
+      return readU32
+    else
+      raise InternalError, 'Unexpected flag byte for Optionalu32'
+    end
+  end
+
   # The Optional<T> type for u64.
 
   def readOptionalu64
@@ -1413,6 +1448,17 @@ class RustBufferBuilder
  end
    
 
+  # The Optional<T> type for u32.
+
+  def write_Optionalu32(v)
+    if v.nil?
+      pack_into(1, 'c', 0)
+    else
+      pack_into(1, 'c', 1)
+      self.write_U32(v)
+    end
+  end
+
   # The Optional<T> type for u64.
 
   def write_Optionalu64(v)
@@ -1788,6 +1834,9 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes,
     [:uint64, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes_paginated,
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_relays,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
@@ -1897,6 +1946,9 @@ module UniFFILib
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_pending_welcomes,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_pending_welcomes_paginated,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_relays,
@@ -2778,6 +2830,14 @@ end
   end
   def get_pending_welcomes()
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes,uniffi_clone_handle(),)
+    return result.consumeIntoSequenceTypeWelcome
+  end
+  def get_pending_welcomes_paginated(limit, offset)
+        limit = (limit ? MdkUniffi::uniffi_in_range(limit, "u32", 0, 2**32) : nil)
+        RustBuffer.check_lower_Optionalu32(limit)
+        offset = (offset ? MdkUniffi::uniffi_in_range(offset, "u32", 0, 2**32) : nil)
+        RustBuffer.check_lower_Optionalu32(offset)
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes_paginated,uniffi_clone_handle(),RustBuffer.alloc_from_Optionalu32(limit),RustBuffer.alloc_from_Optionalu32(offset))
     return result.consumeIntoSequenceTypeWelcome
   end
   def get_relays(mls_group_id)
