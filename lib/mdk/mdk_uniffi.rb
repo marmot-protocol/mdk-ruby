@@ -1832,9 +1832,6 @@ module UniFFILib
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes,
-    [:uint64, RustCallStatus.by_ref],
-    RustBuffer.by_value
-  attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes_paginated,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_relays,
@@ -1946,9 +1943,6 @@ module UniFFILib
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_pending_welcomes,
-    [RustCallStatus.by_ref],
-    :uint16
-  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_pending_welcomes_paginated,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_relays,
@@ -2828,16 +2822,12 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_messages,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
     return result.consumeIntoSequenceTypeMessage
   end
-  def get_pending_welcomes()
-    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes,uniffi_clone_handle(),)
-    return result.consumeIntoSequenceTypeWelcome
-  end
-  def get_pending_welcomes_paginated(limit, offset)
+  def get_pending_welcomes(limit, offset)
         limit = (limit ? MdkUniffi::uniffi_in_range(limit, "u32", 0, 2**32) : nil)
         RustBuffer.check_lower_Optionalu32(limit)
         offset = (offset ? MdkUniffi::uniffi_in_range(offset, "u32", 0, 2**32) : nil)
         RustBuffer.check_lower_Optionalu32(offset)
-    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes_paginated,uniffi_clone_handle(),RustBuffer.alloc_from_Optionalu32(limit),RustBuffer.alloc_from_Optionalu32(offset))
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes,uniffi_clone_handle(),RustBuffer.alloc_from_Optionalu32(limit),RustBuffer.alloc_from_Optionalu32(offset))
     return result.consumeIntoSequenceTypeWelcome
   end
   def get_relays(mls_group_id)
