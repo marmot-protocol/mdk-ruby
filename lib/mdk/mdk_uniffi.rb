@@ -1829,7 +1829,7 @@ module UniFFILib
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_messages,
-    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
@@ -2816,10 +2816,14 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_message,uniffi_clone_handle(),RustBuffer.allocFromString(event_id))
     return result.consumeIntoOptionalTypeMessage
   end
-  def get_messages(mls_group_id)
+  def get_messages(mls_group_id, limit, offset)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
         
-    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_messages,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
+        limit = (limit ? MdkUniffi::uniffi_in_range(limit, "u32", 0, 2**32) : nil)
+        RustBuffer.check_lower_Optionalu32(limit)
+        offset = (offset ? MdkUniffi::uniffi_in_range(offset, "u32", 0, 2**32) : nil)
+        RustBuffer.check_lower_Optionalu32(offset)
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_messages,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_Optionalu32(limit),RustBuffer.alloc_from_Optionalu32(offset))
     return result.consumeIntoSequenceTypeMessage
   end
   def get_pending_welcomes(limit, offset)
