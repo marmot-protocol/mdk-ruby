@@ -363,6 +363,10 @@ end
         RustBuffer.check_lower_TypeUpdateGroupResult(v.result)
       return
     end
+    if v.pending_proposal?
+        
+      return
+    end
     if v.external_join_proposal?
         
       return
@@ -372,6 +376,11 @@ end
       return
     end
     if v.unprocessable?
+        
+      return
+    end
+    if v.ignored_proposal?
+        
         
       return
     end
@@ -980,17 +989,28 @@ class RustBufferStream
         )
     end
     if variant == 3
-        return ProcessMessageResult::EXTERNAL_JOIN_PROPOSAL.new(
+        return ProcessMessageResult::PENDING_PROPOSAL.new(
             self.readString()
         )
     end
     if variant == 4
-        return ProcessMessageResult::COMMIT.new(
+        return ProcessMessageResult::EXTERNAL_JOIN_PROPOSAL.new(
             self.readString()
         )
     end
     if variant == 5
+        return ProcessMessageResult::COMMIT.new(
+            self.readString()
+        )
+    end
+    if variant == 6
         return ProcessMessageResult::UNPROCESSABLE.new(
+            self.readString()
+        )
+    end
+    if variant == 7
+        return ProcessMessageResult::IGNORED_PROPOSAL.new(
+            self.readString(),
             self.readString()
         )
     end
@@ -1433,17 +1453,26 @@ class RustBufferBuilder
       pack_into(4, 'l>', 2)
       self.write_TypeUpdateGroupResult(v.result)
     end
-    if v.external_join_proposal?
+    if v.pending_proposal?
       pack_into(4, 'l>', 3)
       self.write_String(v.mls_group_id)
     end
-    if v.commit?
+    if v.external_join_proposal?
       pack_into(4, 'l>', 4)
       self.write_String(v.mls_group_id)
     end
-    if v.unprocessable?
+    if v.commit?
       pack_into(4, 'l>', 5)
       self.write_String(v.mls_group_id)
+    end
+    if v.unprocessable?
+      pack_into(4, 'l>', 6)
+      self.write_String(v.mls_group_id)
+    end
+    if v.ignored_proposal?
+      pack_into(4, 'l>', 7)
+      self.write_String(v.mls_group_id)
+      self.write_String(v.reason)
     end
  end
    
@@ -2033,6 +2062,10 @@ class ProcessMessageResult
       instance_of? ProcessMessageResult::PROPOSAL
     end
     
+    def pending_proposal?
+      instance_of? ProcessMessageResult::PENDING_PROPOSAL
+    end
+    
     def external_join_proposal?
       instance_of? ProcessMessageResult::EXTERNAL_JOIN_PROPOSAL
     end
@@ -2043,6 +2076,10 @@ class ProcessMessageResult
     
     def unprocessable?
       instance_of? ProcessMessageResult::UNPROCESSABLE
+    end
+    
+    def ignored_proposal?
+      instance_of? ProcessMessageResult::IGNORED_PROPOSAL
     end
     
   end
@@ -2082,6 +2119,10 @@ class ProcessMessageResult
       instance_of? ProcessMessageResult::PROPOSAL
     end
     
+    def pending_proposal?
+      instance_of? ProcessMessageResult::PENDING_PROPOSAL
+    end
+    
     def external_join_proposal?
       instance_of? ProcessMessageResult::EXTERNAL_JOIN_PROPOSAL
     end
@@ -2092,6 +2133,67 @@ class ProcessMessageResult
     
     def unprocessable?
       instance_of? ProcessMessageResult::UNPROCESSABLE
+    end
+    
+    def ignored_proposal?
+      instance_of? ProcessMessageResult::IGNORED_PROPOSAL
+    end
+    
+  end
+  class PENDING_PROPOSAL
+    
+    attr_reader :mls_group_id
+    
+    def initialize(mls_group_id)
+      
+      @mls_group_id = mls_group_id
+      
+    end
+
+    def to_s
+      "ProcessMessageResult::PENDING_PROPOSAL(mls_group_id=#{@mls_group_id})"
+    end
+
+    def ==(other)
+      if !other.pending_proposal?
+        return false
+      end
+      if @mls_group_id != other.mls_group_id
+        return false
+      end
+
+      true
+    end
+
+    # For each variant, we have an `NAME?` method for easily checking
+    # whether an instance is that variant.
+    
+    def application_message?
+      instance_of? ProcessMessageResult::APPLICATION_MESSAGE
+    end
+    
+    def proposal?
+      instance_of? ProcessMessageResult::PROPOSAL
+    end
+    
+    def pending_proposal?
+      instance_of? ProcessMessageResult::PENDING_PROPOSAL
+    end
+    
+    def external_join_proposal?
+      instance_of? ProcessMessageResult::EXTERNAL_JOIN_PROPOSAL
+    end
+    
+    def commit?
+      instance_of? ProcessMessageResult::COMMIT
+    end
+    
+    def unprocessable?
+      instance_of? ProcessMessageResult::UNPROCESSABLE
+    end
+    
+    def ignored_proposal?
+      instance_of? ProcessMessageResult::IGNORED_PROPOSAL
     end
     
   end
@@ -2131,6 +2233,10 @@ class ProcessMessageResult
       instance_of? ProcessMessageResult::PROPOSAL
     end
     
+    def pending_proposal?
+      instance_of? ProcessMessageResult::PENDING_PROPOSAL
+    end
+    
     def external_join_proposal?
       instance_of? ProcessMessageResult::EXTERNAL_JOIN_PROPOSAL
     end
@@ -2141,6 +2247,10 @@ class ProcessMessageResult
     
     def unprocessable?
       instance_of? ProcessMessageResult::UNPROCESSABLE
+    end
+    
+    def ignored_proposal?
+      instance_of? ProcessMessageResult::IGNORED_PROPOSAL
     end
     
   end
@@ -2180,6 +2290,10 @@ class ProcessMessageResult
       instance_of? ProcessMessageResult::PROPOSAL
     end
     
+    def pending_proposal?
+      instance_of? ProcessMessageResult::PENDING_PROPOSAL
+    end
+    
     def external_join_proposal?
       instance_of? ProcessMessageResult::EXTERNAL_JOIN_PROPOSAL
     end
@@ -2190,6 +2304,10 @@ class ProcessMessageResult
     
     def unprocessable?
       instance_of? ProcessMessageResult::UNPROCESSABLE
+    end
+    
+    def ignored_proposal?
+      instance_of? ProcessMessageResult::IGNORED_PROPOSAL
     end
     
   end
@@ -2229,6 +2347,10 @@ class ProcessMessageResult
       instance_of? ProcessMessageResult::PROPOSAL
     end
     
+    def pending_proposal?
+      instance_of? ProcessMessageResult::PENDING_PROPOSAL
+    end
+    
     def external_join_proposal?
       instance_of? ProcessMessageResult::EXTERNAL_JOIN_PROPOSAL
     end
@@ -2239,6 +2361,71 @@ class ProcessMessageResult
     
     def unprocessable?
       instance_of? ProcessMessageResult::UNPROCESSABLE
+    end
+    
+    def ignored_proposal?
+      instance_of? ProcessMessageResult::IGNORED_PROPOSAL
+    end
+    
+  end
+  class IGNORED_PROPOSAL
+    
+    attr_reader :mls_group_id, :reason
+    
+    def initialize(mls_group_id, reason)
+      
+      @mls_group_id = mls_group_id
+      @reason = reason
+      
+    end
+
+    def to_s
+      "ProcessMessageResult::IGNORED_PROPOSAL(mls_group_id=#{@mls_group_id}, reason=#{@reason})"
+    end
+
+    def ==(other)
+      if !other.ignored_proposal?
+        return false
+      end
+      if @mls_group_id != other.mls_group_id
+        return false
+      end
+      if @reason != other.reason
+        return false
+      end
+
+      true
+    end
+
+    # For each variant, we have an `NAME?` method for easily checking
+    # whether an instance is that variant.
+    
+    def application_message?
+      instance_of? ProcessMessageResult::APPLICATION_MESSAGE
+    end
+    
+    def proposal?
+      instance_of? ProcessMessageResult::PROPOSAL
+    end
+    
+    def pending_proposal?
+      instance_of? ProcessMessageResult::PENDING_PROPOSAL
+    end
+    
+    def external_join_proposal?
+      instance_of? ProcessMessageResult::EXTERNAL_JOIN_PROPOSAL
+    end
+    
+    def commit?
+      instance_of? ProcessMessageResult::COMMIT
+    end
+    
+    def unprocessable?
+      instance_of? ProcessMessageResult::UNPROCESSABLE
+    end
+    
+    def ignored_proposal?
+      instance_of? ProcessMessageResult::IGNORED_PROPOSAL
     end
     
   end
