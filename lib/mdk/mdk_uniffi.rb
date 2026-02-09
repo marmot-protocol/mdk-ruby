@@ -159,6 +159,7 @@ end
     RustBuffer.check_lower_Sequencestring(v.admin_pubkeys)
     RustBuffer.check_lower_Optionalstring(v.last_message_id)
     RustBuffer.check_lower_Optionalu64(v.last_message_at)
+    RustBuffer.check_lower_Optionalu64(v.last_message_processed_at)
     
     
   end
@@ -269,9 +270,34 @@ end
     end
   end
 
+  # The Record type MdkConfig.
+
+  def self.check_lower_TypeMdkConfig(v)
+    RustBuffer.check_lower_Optionalu64(v.max_event_age_secs)
+    RustBuffer.check_lower_Optionalu64(v.max_future_skew_secs)
+    RustBuffer.check_lower_Optionalu32(v.out_of_order_tolerance)
+    RustBuffer.check_lower_Optionalu32(v.maximum_forward_distance)
+    RustBuffer.check_lower_Optionalu32(v.epoch_snapshot_retention)
+    RustBuffer.check_lower_Optionalu64(v.snapshot_ttl_seconds)
+  end
+
+  def self.alloc_from_TypeMdkConfig(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeMdkConfig(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeMdkConfig
+    consumeWithStream do |stream|
+      return stream.readTypeMdkConfig
+    end
+  end
+
   # The Record type Message.
 
   def self.check_lower_TypeMessage(v)
+    
     
     
     
@@ -382,6 +408,9 @@ end
     if v.ignored_proposal?
         
         
+      return
+    end
+    if v.previously_failed?
       return
     end
   end
@@ -523,6 +552,27 @@ end
   def consumeIntoOptionalTypeImageDimensions
     consumeWithStream do |stream|
       return stream.readOptionalTypeImageDimensions
+    end
+  end
+
+  # The Optional<T> type for TypeMdkConfig.
+
+  def self.check_lower_OptionalTypeMdkConfig(v)
+    if not v.nil?
+      RustBuffer.check_lower_TypeMdkConfig(v)
+    end
+  end
+
+  def self.alloc_from_OptionalTypeMdkConfig(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_OptionalTypeMdkConfig(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoOptionalTypeMdkConfig
+    consumeWithStream do |stream|
+      return stream.readOptionalTypeMdkConfig
     end
   end
 
@@ -840,6 +890,7 @@ class RustBufferStream
       admin_pubkeys: readSequencestring,
       last_message_id: readOptionalstring,
       last_message_at: readOptionalu64,
+      last_message_processed_at: readOptionalu64,
       epoch: readU64,
       state: readString
     )
@@ -894,6 +945,19 @@ class RustBufferStream
     )
   end
 
+  # The Record type MdkConfig.
+
+  def readTypeMdkConfig
+    MdkConfig.new(
+      max_event_age_secs: readOptionalu64,
+      max_future_skew_secs: readOptionalu64,
+      out_of_order_tolerance: readOptionalu32,
+      maximum_forward_distance: readOptionalu32,
+      epoch_snapshot_retention: readOptionalu32,
+      snapshot_ttl_seconds: readOptionalu64
+    )
+  end
+
   # The Record type Message.
 
   def readTypeMessage
@@ -904,6 +968,7 @@ class RustBufferStream
       event_id: readString,
       sender_pubkey: readString,
       event_json: readString,
+      created_at: readU64,
       processed_at: readU64,
       kind: readU16,
       state: readString
@@ -1014,6 +1079,10 @@ class RustBufferStream
             self.readString()
         )
     end
+    if variant == 8
+        return ProcessMessageResult::PREVIOUSLY_FAILED.new
+        
+    end
     raise InternalError, 'Unexpected variant tag for TypeProcessMessageResult'
   end
 
@@ -1100,6 +1169,20 @@ class RustBufferStream
       return readTypeImageDimensions
     else
       raise InternalError, 'Unexpected flag byte for OptionalTypeImageDimensions'
+    end
+  end
+
+  # The Optional<T> type for TypeMdkConfig.
+
+  def readOptionalTypeMdkConfig
+    flag = unpack_from 1, 'c'
+
+    if flag == 0
+      return nil
+    elsif flag == 1
+      return readTypeMdkConfig
+    else
+      raise InternalError, 'Unexpected flag byte for OptionalTypeMdkConfig'
     end
   end
 
@@ -1353,6 +1436,7 @@ class RustBufferBuilder
     self.write_Sequencestring(v.admin_pubkeys)
     self.write_Optionalstring(v.last_message_id)
     self.write_Optionalu64(v.last_message_at)
+    self.write_Optionalu64(v.last_message_processed_at)
     self.write_U64(v.epoch)
     self.write_String(v.state)
   end
@@ -1398,6 +1482,17 @@ class RustBufferBuilder
     self.write_SequenceSequencestring(v.tags)
   end
 
+  # The Record type MdkConfig.
+
+  def write_TypeMdkConfig(v)
+    self.write_Optionalu64(v.max_event_age_secs)
+    self.write_Optionalu64(v.max_future_skew_secs)
+    self.write_Optionalu32(v.out_of_order_tolerance)
+    self.write_Optionalu32(v.maximum_forward_distance)
+    self.write_Optionalu32(v.epoch_snapshot_retention)
+    self.write_Optionalu64(v.snapshot_ttl_seconds)
+  end
+
   # The Record type Message.
 
   def write_TypeMessage(v)
@@ -1407,6 +1502,7 @@ class RustBufferBuilder
     self.write_String(v.event_id)
     self.write_String(v.sender_pubkey)
     self.write_String(v.event_json)
+    self.write_U64(v.created_at)
     self.write_U64(v.processed_at)
     self.write_U16(v.kind)
     self.write_String(v.state)
@@ -1474,6 +1570,9 @@ class RustBufferBuilder
       self.write_String(v.mls_group_id)
       self.write_String(v.reason)
     end
+    if v.previously_failed?
+      pack_into(4, 'l>', 8)
+    end
  end
    
 
@@ -1540,6 +1639,17 @@ class RustBufferBuilder
     else
       pack_into(1, 'c', 1)
       self.write_TypeImageDimensions(v)
+    end
+  end
+
+  # The Optional<T> type for TypeMdkConfig.
+
+  def write_OptionalTypeMdkConfig(v)
+    if v.nil?
+      pack_into(1, 'c', 0)
+    else
+      pack_into(1, 'c', 1)
+      self.write_TypeMdkConfig(v)
     end
   end
 
@@ -1855,7 +1965,7 @@ module UniFFILib
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_message,
-    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_messages,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
@@ -1903,7 +2013,13 @@ module UniFFILib
     [RustBuffer.by_value, :uint16, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_func_new_mdk,
-    [RustBuffer.by_value, RustCallStatus.by_ref],
+    [RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    :uint64
+  attach_function :uniffi_mdk_uniffi_fn_func_new_mdk_unencrypted,
+    [RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    :uint64
+  attach_function :uniffi_mdk_uniffi_fn_func_new_mdk_with_key,
+    [RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     :uint64
   attach_function :uniffi_mdk_uniffi_fn_func_prepare_group_image_for_upload,
     [RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
@@ -1927,6 +2043,12 @@ module UniFFILib
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_func_new_mdk,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_func_new_mdk_unencrypted,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_func_new_mdk_with_key,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_func_prepare_group_image_for_upload,
@@ -2082,6 +2204,10 @@ class ProcessMessageResult
       instance_of? ProcessMessageResult::IGNORED_PROPOSAL
     end
     
+    def previously_failed?
+      instance_of? ProcessMessageResult::PREVIOUSLY_FAILED
+    end
+    
   end
   class PROPOSAL
     
@@ -2137,6 +2263,10 @@ class ProcessMessageResult
     
     def ignored_proposal?
       instance_of? ProcessMessageResult::IGNORED_PROPOSAL
+    end
+    
+    def previously_failed?
+      instance_of? ProcessMessageResult::PREVIOUSLY_FAILED
     end
     
   end
@@ -2196,6 +2326,10 @@ class ProcessMessageResult
       instance_of? ProcessMessageResult::IGNORED_PROPOSAL
     end
     
+    def previously_failed?
+      instance_of? ProcessMessageResult::PREVIOUSLY_FAILED
+    end
+    
   end
   class EXTERNAL_JOIN_PROPOSAL
     
@@ -2251,6 +2385,10 @@ class ProcessMessageResult
     
     def ignored_proposal?
       instance_of? ProcessMessageResult::IGNORED_PROPOSAL
+    end
+    
+    def previously_failed?
+      instance_of? ProcessMessageResult::PREVIOUSLY_FAILED
     end
     
   end
@@ -2310,6 +2448,10 @@ class ProcessMessageResult
       instance_of? ProcessMessageResult::IGNORED_PROPOSAL
     end
     
+    def previously_failed?
+      instance_of? ProcessMessageResult::PREVIOUSLY_FAILED
+    end
+    
   end
   class UNPROCESSABLE
     
@@ -2365,6 +2507,10 @@ class ProcessMessageResult
     
     def ignored_proposal?
       instance_of? ProcessMessageResult::IGNORED_PROPOSAL
+    end
+    
+    def previously_failed?
+      instance_of? ProcessMessageResult::PREVIOUSLY_FAILED
     end
     
   end
@@ -2428,6 +2574,65 @@ class ProcessMessageResult
       instance_of? ProcessMessageResult::IGNORED_PROPOSAL
     end
     
+    def previously_failed?
+      instance_of? ProcessMessageResult::PREVIOUSLY_FAILED
+    end
+    
+  end
+  class PREVIOUSLY_FAILED
+    
+    def initialize()
+      
+      
+    end
+
+    def to_s
+      "ProcessMessageResult::PREVIOUSLY_FAILED()"
+    end
+
+    def ==(other)
+      if !other.previously_failed?
+        return false
+      end
+
+      true
+    end
+
+    # For each variant, we have an `NAME?` method for easily checking
+    # whether an instance is that variant.
+    
+    def application_message?
+      instance_of? ProcessMessageResult::APPLICATION_MESSAGE
+    end
+    
+    def proposal?
+      instance_of? ProcessMessageResult::PROPOSAL
+    end
+    
+    def pending_proposal?
+      instance_of? ProcessMessageResult::PENDING_PROPOSAL
+    end
+    
+    def external_join_proposal?
+      instance_of? ProcessMessageResult::EXTERNAL_JOIN_PROPOSAL
+    end
+    
+    def commit?
+      instance_of? ProcessMessageResult::COMMIT
+    end
+    
+    def unprocessable?
+      instance_of? ProcessMessageResult::UNPROCESSABLE
+    end
+    
+    def ignored_proposal?
+      instance_of? ProcessMessageResult::IGNORED_PROPOSAL
+    end
+    
+    def previously_failed?
+      instance_of? ProcessMessageResult::PREVIOUSLY_FAILED
+    end
+    
   end
   
 end
@@ -2457,9 +2662,9 @@ end
   
   # Record type Group
 class Group
-  attr_reader :mls_group_id, :nostr_group_id, :name, :description, :image_hash, :image_key, :image_nonce, :admin_pubkeys, :last_message_id, :last_message_at, :epoch, :state
+  attr_reader :mls_group_id, :nostr_group_id, :name, :description, :image_hash, :image_key, :image_nonce, :admin_pubkeys, :last_message_id, :last_message_at, :last_message_processed_at, :epoch, :state
 
-  def initialize(mls_group_id:, nostr_group_id:, name:, description:, image_hash:, image_key:, image_nonce:, admin_pubkeys:, last_message_id:, last_message_at:, epoch:, state:)
+  def initialize(mls_group_id:, nostr_group_id:, name:, description:, image_hash:, image_key:, image_nonce:, admin_pubkeys:, last_message_id:, last_message_at:, last_message_processed_at:, epoch:, state:)
     @mls_group_id = mls_group_id
     @nostr_group_id = nostr_group_id
     @name = name
@@ -2470,6 +2675,7 @@ class Group
     @admin_pubkeys = admin_pubkeys
     @last_message_id = last_message_id
     @last_message_at = last_message_at
+    @last_message_processed_at = last_message_processed_at
     @epoch = epoch
     @state = state
   end
@@ -2503,6 +2709,9 @@ class Group
       return false
     end
     if @last_message_at != other.last_message_at
+      return false
+    end
+    if @last_message_processed_at != other.last_message_processed_at
       return false
     end
     if @epoch != other.epoch
@@ -2652,17 +2861,55 @@ class KeyPackageResult
   end
 end
   
+  # Record type MdkConfig
+class MdkConfig
+  attr_reader :max_event_age_secs, :max_future_skew_secs, :out_of_order_tolerance, :maximum_forward_distance, :epoch_snapshot_retention, :snapshot_ttl_seconds
+
+  def initialize(max_event_age_secs:, max_future_skew_secs:, out_of_order_tolerance:, maximum_forward_distance:, epoch_snapshot_retention:, snapshot_ttl_seconds:)
+    @max_event_age_secs = max_event_age_secs
+    @max_future_skew_secs = max_future_skew_secs
+    @out_of_order_tolerance = out_of_order_tolerance
+    @maximum_forward_distance = maximum_forward_distance
+    @epoch_snapshot_retention = epoch_snapshot_retention
+    @snapshot_ttl_seconds = snapshot_ttl_seconds
+  end
+
+  def ==(other)
+    if @max_event_age_secs != other.max_event_age_secs
+      return false
+    end
+    if @max_future_skew_secs != other.max_future_skew_secs
+      return false
+    end
+    if @out_of_order_tolerance != other.out_of_order_tolerance
+      return false
+    end
+    if @maximum_forward_distance != other.maximum_forward_distance
+      return false
+    end
+    if @epoch_snapshot_retention != other.epoch_snapshot_retention
+      return false
+    end
+    if @snapshot_ttl_seconds != other.snapshot_ttl_seconds
+      return false
+    end
+
+    true
+  end
+end
+  
   # Record type Message
 class Message
-  attr_reader :id, :mls_group_id, :nostr_group_id, :event_id, :sender_pubkey, :event_json, :processed_at, :kind, :state
+  attr_reader :id, :mls_group_id, :nostr_group_id, :event_id, :sender_pubkey, :event_json, :created_at, :processed_at, :kind, :state
 
-  def initialize(id:, mls_group_id:, nostr_group_id:, event_id:, sender_pubkey:, event_json:, processed_at:, kind:, state:)
+  def initialize(id:, mls_group_id:, nostr_group_id:, event_id:, sender_pubkey:, event_json:, created_at:, processed_at:, kind:, state:)
     @id = id
     @mls_group_id = mls_group_id
     @nostr_group_id = nostr_group_id
     @event_id = event_id
     @sender_pubkey = sender_pubkey
     @event_json = event_json
+    @created_at = created_at
     @processed_at = processed_at
     @kind = kind
     @state = state
@@ -2685,6 +2932,9 @@ class Message
       return false
     end
     if @event_json != other.event_json
+      return false
+    end
+    if @created_at != other.created_at
       return false
     end
     if @processed_at != other.processed_at
@@ -2839,11 +3089,53 @@ end
   
   
 
-def self.new_mdk(db_path)
+def self.new_mdk(db_path, service_id, db_key_id, config)
     db_path = MdkUniffi::uniffi_utf8(db_path)
     
     
-  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_new_mdk,RustBuffer.allocFromString(db_path))
+    service_id = MdkUniffi::uniffi_utf8(service_id)
+    
+    
+    db_key_id = MdkUniffi::uniffi_utf8(db_key_id)
+    
+    
+    config = (config ? config : nil)
+    RustBuffer.check_lower_OptionalTypeMdkConfig(config)
+    
+  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_new_mdk,RustBuffer.allocFromString(db_path),RustBuffer.allocFromString(service_id),RustBuffer.allocFromString(db_key_id),RustBuffer.alloc_from_OptionalTypeMdkConfig(config))
+  return Mdk.uniffi_allocate(result)
+end
+
+
+  
+  
+
+def self.new_mdk_unencrypted(db_path, config)
+    db_path = MdkUniffi::uniffi_utf8(db_path)
+    
+    
+    config = (config ? config : nil)
+    RustBuffer.check_lower_OptionalTypeMdkConfig(config)
+    
+  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_new_mdk_unencrypted,RustBuffer.allocFromString(db_path),RustBuffer.alloc_from_OptionalTypeMdkConfig(config))
+  return Mdk.uniffi_allocate(result)
+end
+
+
+  
+  
+
+def self.new_mdk_with_key(db_path, encryption_key, config)
+    db_path = MdkUniffi::uniffi_utf8(db_path)
+    
+    
+    encryption_key = MdkUniffi::uniffi_bytes(encryption_key)
+    
+    
+    config = (config ? config : nil)
+    RustBuffer.check_lower_OptionalTypeMdkConfig(config)
+    
+  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_new_mdk_with_key,RustBuffer.allocFromString(db_path),RustBuffer.allocFromBytes(encryption_key),RustBuffer.alloc_from_OptionalTypeMdkConfig(config))
   return Mdk.uniffi_allocate(result)
 end
 
@@ -2997,10 +3289,12 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_members,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
     return result.consumeIntoSequencestring
   end
-  def get_message(event_id)
+  def get_message(mls_group_id, event_id)
+        mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
+        
         event_id = MdkUniffi::uniffi_utf8(event_id)
         
-    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_message,uniffi_clone_handle(),RustBuffer.allocFromString(event_id))
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_message,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.allocFromString(event_id))
     return result.consumeIntoOptionalTypeMessage
   end
   def get_messages(mls_group_id, limit, offset)

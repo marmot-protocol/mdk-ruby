@@ -27,9 +27,13 @@ gem install mdk
 ```ruby
 require 'mdk'
 
-# Create an MDK instance with a SQLite database path
+# Create an MDK instance with automatic key management (recommended)
+# The encryption key is stored securely in your platform's keyring
 db_path = "/path/to/mdk.db"
-mdk = Mdk.new_mdk(db_path)
+mdk = Mdk.new_mdk(db_path, "com.example.myapp", "mdk.db.key.default")
+
+# For development only (unencrypted - never use in production!)
+# mdk = Mdk.new_mdk_unencrypted(db_path)
 ```
 
 ### Create and Publish Key Package
@@ -173,7 +177,7 @@ welcomes = mdk.get_pending_welcomes
 welcomes.each do |welcome|
   puts "Invited to: #{welcome.group_name}"
   puts "By: #{welcome.welcomer}"
-  
+
   # Accept the welcome
   mdk.accept_welcome(welcome_json: welcome.event_json)
 end
@@ -314,7 +318,7 @@ end
 # - event_id: String (event ID, hex-encoded)
 # - sender_pubkey: String (sender public key, hex-encoded)
 # - event_json: String (JSON representation of the event)
-# - processed_at: Integer (timestamp when message was processed, Unix timestamp)
+# - created_at: Integer (timestamp when message was created, Unix timestamp)
 # - kind: Integer (message kind)
 # - state: String (message state, e.g., "processed", "pending")
 ```
@@ -359,7 +363,7 @@ require 'mdk'
 
 # 1. Initialize
 db_path = "/path/to/mdk.db"
-mdk = Mdk.new_mdk(db_path)
+mdk = Mdk.new_mdk(db_path, "com.example.myapp", "mdk.db.key.default")
 
 # 2. Create and publish key package
 key_package = mdk.create_key_package_for_event(
