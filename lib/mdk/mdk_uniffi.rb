@@ -844,6 +844,15 @@ class RustBufferStream
     unpack_from 8, 'Q>'
   end
 
+  def readBool
+    v = unpack_from 1, 'c'
+
+    return false if v == 0
+    return true if v == 1
+
+    raise InternalError, 'Unexpected byte for Boolean type'
+  end
+
   def readString
     size = unpack_from 4, 'l>'
 
@@ -1397,6 +1406,10 @@ class RustBufferBuilder
     pack_into(8, 'Q>', v)
   end
 
+  def write_Bool(v)
+    pack_into(1, 'c', v ? 1 : 0)
+  end
+
   def write_String(v)
     v = MdkUniffi::uniffi_utf8(v)
     pack_into 4, 'l>', v.bytes.size
@@ -1946,6 +1959,9 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_key_package_for_event,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_key_package_for_event_with_options,
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, :int8, RustCallStatus.by_ref],
+    RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_message,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, :uint16, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
@@ -2067,6 +2083,9 @@ module UniFFILib
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_create_key_package_for_event,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_create_key_package_for_event_with_options,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_create_message,
@@ -3245,6 +3264,16 @@ end
         relays = relays.map { |v| MdkUniffi::uniffi_utf8(v) }
         RustBuffer.check_lower_Sequencestring(relays)
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_key_package_for_event,uniffi_clone_handle(),RustBuffer.allocFromString(public_key),RustBuffer.alloc_from_Sequencestring(relays))
+    return result.consumeIntoTypeKeyPackageResult
+  end
+  def create_key_package_for_event_with_options(public_key, relays, protected)
+        public_key = MdkUniffi::uniffi_utf8(public_key)
+        
+        relays = relays.map { |v| MdkUniffi::uniffi_utf8(v) }
+        RustBuffer.check_lower_Sequencestring(relays)
+        protected = protected ? true : false
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_key_package_for_event_with_options,uniffi_clone_handle(),RustBuffer.allocFromString(public_key),RustBuffer.alloc_from_Sequencestring(relays),(protected ? 1 : 0))
     return result.consumeIntoTypeKeyPackageResult
   end
   def create_message(mls_group_id, sender_public_key, content, kind, tags)
