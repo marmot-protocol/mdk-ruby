@@ -1977,6 +1977,9 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_groups,
     [:uint64, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_last_message,
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_members,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
@@ -1984,7 +1987,7 @@ module UniFFILib
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_messages,
-    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
@@ -2101,6 +2104,9 @@ module UniFFILib
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_groups,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_last_message,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_members,
@@ -3312,6 +3318,14 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_groups,uniffi_clone_handle(),)
     return result.consumeIntoSequenceTypeGroup
   end
+  def get_last_message(mls_group_id, sort_order)
+        mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
+        
+        sort_order = MdkUniffi::uniffi_utf8(sort_order)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_last_message,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.allocFromString(sort_order))
+    return result.consumeIntoOptionalTypeMessage
+  end
   def get_members(mls_group_id)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
         
@@ -3326,14 +3340,16 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_message,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.allocFromString(event_id))
     return result.consumeIntoOptionalTypeMessage
   end
-  def get_messages(mls_group_id, limit, offset)
+  def get_messages(mls_group_id, limit, offset, sort_order)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
         
         limit = (limit ? MdkUniffi::uniffi_in_range(limit, "u32", 0, 2**32) : nil)
         RustBuffer.check_lower_Optionalu32(limit)
         offset = (offset ? MdkUniffi::uniffi_in_range(offset, "u32", 0, 2**32) : nil)
         RustBuffer.check_lower_Optionalu32(offset)
-    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_messages,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_Optionalu32(limit),RustBuffer.alloc_from_Optionalu32(offset))
+        sort_order = (sort_order ? MdkUniffi::uniffi_utf8(sort_order) : nil)
+        RustBuffer.check_lower_Optionalstring(sort_order)
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_messages,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_Optionalu32(limit),RustBuffer.alloc_from_Optionalu32(offset),RustBuffer.alloc_from_Optionalstring(sort_order))
     return result.consumeIntoSequenceTypeMessage
   end
   def get_pending_welcomes(limit, offset)
