@@ -255,6 +255,7 @@ end
   def self.check_lower_TypeKeyPackageResult(v)
     
     RustBuffer.check_lower_SequenceSequencestring(v.tags)
+    
   end
 
   def self.alloc_from_TypeKeyPackageResult(v)
@@ -950,7 +951,8 @@ class RustBufferStream
   def readTypeKeyPackageResult
     KeyPackageResult.new(
       key_package: readString,
-      tags: readSequenceSequencestring
+      tags: readSequenceSequencestring,
+      hash_ref: readBytes
     )
   end
 
@@ -1493,6 +1495,7 @@ class RustBufferBuilder
   def write_TypeKeyPackageResult(v)
     self.write_String(v.key_package)
     self.write_SequenceSequencestring(v.tags)
+    self.write_Bytes(v.hash_ref)
   end
 
   # The Record type MdkConfig.
@@ -2867,11 +2870,12 @@ end
   
   # Record type KeyPackageResult
 class KeyPackageResult
-  attr_reader :key_package, :tags
+  attr_reader :key_package, :tags, :hash_ref
 
-  def initialize(key_package:, tags:)
+  def initialize(key_package:, tags:, hash_ref:)
     @key_package = key_package
     @tags = tags
+    @hash_ref = hash_ref
   end
 
   def ==(other)
@@ -2879,6 +2883,9 @@ class KeyPackageResult
       return false
     end
     if @tags != other.tags
+      return false
+    end
+    if @hash_ref != other.hash_ref
       return false
     end
 
