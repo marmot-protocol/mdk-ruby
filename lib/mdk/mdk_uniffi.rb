@@ -162,6 +162,7 @@ end
     RustBuffer.check_lower_Optionalu64(v.last_message_processed_at)
     
     
+    
   end
 
   def self.alloc_from_TypeGroup(v)
@@ -902,7 +903,8 @@ class RustBufferStream
       last_message_at: readOptionalu64,
       last_message_processed_at: readOptionalu64,
       epoch: readU64,
-      state: readString
+      state: readString,
+      self_update_state: readString
     )
   end
 
@@ -1454,6 +1456,7 @@ class RustBufferBuilder
     self.write_Optionalu64(v.last_message_processed_at)
     self.write_U64(v.epoch)
     self.write_String(v.state)
+    self.write_String(v.self_update_state)
   end
 
   # The Record type GroupDataUpdate.
@@ -2001,6 +2004,9 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_welcome,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_groups_needing_self_update,
+    [:uint64, :uint64, RustCallStatus.by_ref],
+    RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_leave_group,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
@@ -2128,6 +2134,9 @@ module UniFFILib
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_welcome,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_groups_needing_self_update,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_leave_group,
@@ -2690,9 +2699,9 @@ end
   
   # Record type Group
 class Group
-  attr_reader :mls_group_id, :nostr_group_id, :name, :description, :image_hash, :image_key, :image_nonce, :admin_pubkeys, :last_message_id, :last_message_at, :last_message_processed_at, :epoch, :state
+  attr_reader :mls_group_id, :nostr_group_id, :name, :description, :image_hash, :image_key, :image_nonce, :admin_pubkeys, :last_message_id, :last_message_at, :last_message_processed_at, :epoch, :state, :self_update_state
 
-  def initialize(mls_group_id:, nostr_group_id:, name:, description:, image_hash:, image_key:, image_nonce:, admin_pubkeys:, last_message_id:, last_message_at:, last_message_processed_at:, epoch:, state:)
+  def initialize(mls_group_id:, nostr_group_id:, name:, description:, image_hash:, image_key:, image_nonce:, admin_pubkeys:, last_message_id:, last_message_at:, last_message_processed_at:, epoch:, state:, self_update_state:)
     @mls_group_id = mls_group_id
     @nostr_group_id = nostr_group_id
     @name = name
@@ -2706,6 +2715,7 @@ class Group
     @last_message_processed_at = last_message_processed_at
     @epoch = epoch
     @state = state
+    @self_update_state = self_update_state
   end
 
   def ==(other)
@@ -2746,6 +2756,9 @@ class Group
       return false
     end
     if @state != other.state
+      return false
+    end
+    if @self_update_state != other.self_update_state
       return false
     end
 
@@ -3378,6 +3391,12 @@ end
         
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_welcome,uniffi_clone_handle(),RustBuffer.allocFromString(event_id))
     return result.consumeIntoOptionalTypeWelcome
+  end
+  def groups_needing_self_update(threshold_secs)
+        threshold_secs = MdkUniffi::uniffi_in_range(threshold_secs, "u64", 0, 2**64)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_groups_needing_self_update,uniffi_clone_handle(),threshold_secs)
+    return result.consumeIntoSequencestring
   end
   def leave_group(mls_group_id)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
