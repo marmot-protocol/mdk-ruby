@@ -1959,6 +1959,9 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_add_members,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_clear_pending_commit,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    :void
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_group,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
@@ -2089,6 +2092,9 @@ module UniFFILib
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_add_members,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_clear_pending_commit,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_create_group,
@@ -3268,6 +3274,12 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_add_members,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_Sequencestring(key_package_events_json))
     return result.consumeIntoTypeUpdateGroupResult
   end
+  def clear_pending_commit(mls_group_id)
+        mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
+        
+      MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_clear_pending_commit,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
+  end
+  
   def create_group(creator_public_key, member_key_package_events_json, name, description, relays, admins)
         creator_public_key = MdkUniffi::uniffi_utf8(creator_public_key)
         
