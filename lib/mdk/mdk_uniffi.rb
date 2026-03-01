@@ -279,6 +279,7 @@ end
     RustBuffer.check_lower_Optionalu64(v.max_future_skew_secs)
     RustBuffer.check_lower_Optionalu32(v.out_of_order_tolerance)
     RustBuffer.check_lower_Optionalu32(v.maximum_forward_distance)
+    RustBuffer.check_lower_Optionalu32(v.max_past_epochs)
     RustBuffer.check_lower_Optionalu32(v.epoch_snapshot_retention)
     RustBuffer.check_lower_Optionalu64(v.snapshot_ttl_seconds)
   end
@@ -966,6 +967,7 @@ class RustBufferStream
       max_future_skew_secs: readOptionalu64,
       out_of_order_tolerance: readOptionalu32,
       maximum_forward_distance: readOptionalu32,
+      max_past_epochs: readOptionalu32,
       epoch_snapshot_retention: readOptionalu32,
       snapshot_ttl_seconds: readOptionalu64
     )
@@ -1508,6 +1510,7 @@ class RustBufferBuilder
     self.write_Optionalu64(v.max_future_skew_secs)
     self.write_Optionalu32(v.out_of_order_tolerance)
     self.write_Optionalu32(v.maximum_forward_distance)
+    self.write_Optionalu32(v.max_past_epochs)
     self.write_Optionalu32(v.epoch_snapshot_retention)
     self.write_Optionalu64(v.snapshot_ttl_seconds)
   end
@@ -2914,13 +2917,14 @@ end
   
   # Record type MdkConfig
 class MdkConfig
-  attr_reader :max_event_age_secs, :max_future_skew_secs, :out_of_order_tolerance, :maximum_forward_distance, :epoch_snapshot_retention, :snapshot_ttl_seconds
+  attr_reader :max_event_age_secs, :max_future_skew_secs, :out_of_order_tolerance, :maximum_forward_distance, :max_past_epochs, :epoch_snapshot_retention, :snapshot_ttl_seconds
 
-  def initialize(max_event_age_secs:, max_future_skew_secs:, out_of_order_tolerance:, maximum_forward_distance:, epoch_snapshot_retention:, snapshot_ttl_seconds:)
+  def initialize(max_event_age_secs:, max_future_skew_secs:, out_of_order_tolerance:, maximum_forward_distance:, max_past_epochs:, epoch_snapshot_retention:, snapshot_ttl_seconds:)
     @max_event_age_secs = max_event_age_secs
     @max_future_skew_secs = max_future_skew_secs
     @out_of_order_tolerance = out_of_order_tolerance
     @maximum_forward_distance = maximum_forward_distance
+    @max_past_epochs = max_past_epochs
     @epoch_snapshot_retention = epoch_snapshot_retention
     @snapshot_ttl_seconds = snapshot_ttl_seconds
   end
@@ -2936,6 +2940,9 @@ class MdkConfig
       return false
     end
     if @maximum_forward_distance != other.maximum_forward_distance
+      return false
+    end
+    if @max_past_epochs != other.max_past_epochs
       return false
     end
     if @epoch_snapshot_retention != other.epoch_snapshot_retention
