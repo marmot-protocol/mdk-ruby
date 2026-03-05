@@ -146,6 +146,34 @@ end
     end
   end
 
+  # The Record type EncryptedMediaUploadResult.
+
+  def self.check_lower_TypeEncryptedMediaUploadResult(v)
+    
+    
+    
+    
+    
+    
+    
+    RustBuffer.check_lower_OptionalSequenceu32(v.dimensions)
+    RustBuffer.check_lower_Optionalstring(v.blurhash)
+    
+  end
+
+  def self.alloc_from_TypeEncryptedMediaUploadResult(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeEncryptedMediaUploadResult(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeEncryptedMediaUploadResult
+    consumeWithStream do |stream|
+      return stream.readTypeEncryptedMediaUploadResult
+    end
+  end
+
   # The Record type Group.
 
   def self.check_lower_TypeGroup(v)
@@ -294,6 +322,54 @@ end
   def consumeIntoTypeMdkConfig
     consumeWithStream do |stream|
       return stream.readTypeMdkConfig
+    end
+  end
+
+  # The Record type MediaProcessingOptionsInput.
+
+  def self.check_lower_TypeMediaProcessingOptionsInput(v)
+    RustBuffer.check_lower_Optionalbool(v.sanitize_exif)
+    RustBuffer.check_lower_Optionalbool(v.generate_blurhash)
+    RustBuffer.check_lower_Optionalu32(v.max_dimension)
+    RustBuffer.check_lower_Optionalu64(v.max_file_size)
+    RustBuffer.check_lower_Optionalu64(v.max_filename_length)
+  end
+
+  def self.alloc_from_TypeMediaProcessingOptionsInput(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeMediaProcessingOptionsInput(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeMediaProcessingOptionsInput
+    consumeWithStream do |stream|
+      return stream.readTypeMediaProcessingOptionsInput
+    end
+  end
+
+  # The Record type MediaReferenceRecord.
+
+  def self.check_lower_TypeMediaReferenceRecord(v)
+    
+    
+    
+    
+    RustBuffer.check_lower_OptionalSequenceu32(v.dimensions)
+    
+    
+  end
+
+  def self.alloc_from_TypeMediaReferenceRecord(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeMediaReferenceRecord(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeMediaReferenceRecord
+    consumeWithStream do |stream|
+      return stream.readTypeMediaReferenceRecord
     end
   end
 
@@ -474,6 +550,27 @@ end
     end
   end
 
+  # The Optional<T> type for bool.
+
+  def self.check_lower_Optionalbool(v)
+    if not v.nil?
+      
+    end
+  end
+
+  def self.alloc_from_Optionalbool(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_Optionalbool(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoOptionalbool
+    consumeWithStream do |stream|
+      return stream.readOptionalbool
+    end
+  end
+
   # The Optional<T> type for string.
 
   def self.check_lower_Optionalstring(v)
@@ -642,6 +739,27 @@ end
     end
   end
 
+  # The Optional<T> type for Sequenceu32.
+
+  def self.check_lower_OptionalSequenceu32(v)
+    if not v.nil?
+      RustBuffer.check_lower_Sequenceu32(v)
+    end
+  end
+
+  def self.alloc_from_OptionalSequenceu32(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_OptionalSequenceu32(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoOptionalSequenceu32
+    consumeWithStream do |stream|
+      return stream.readOptionalSequenceu32
+    end
+  end
+
   # The Optional<T> type for Sequencestring.
 
   def self.check_lower_OptionalSequencestring(v)
@@ -681,6 +799,27 @@ end
   def consumeIntoOptionalSequenceSequencestring
     consumeWithStream do |stream|
       return stream.readOptionalSequenceSequencestring
+    end
+  end
+
+  # The Sequence<T> type for u32.
+
+  def self.check_lower_Sequenceu32(v)
+    v.each do |item|
+      
+    end
+  end
+
+  def self.alloc_from_Sequenceu32(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_Sequenceu32(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoSequenceu32
+    consumeWithStream do |stream|
+      return stream.readSequenceu32
     end
   end
 
@@ -888,6 +1027,23 @@ class RustBufferStream
     )
   end
 
+  # The Record type EncryptedMediaUploadResult.
+
+  def readTypeEncryptedMediaUploadResult
+    EncryptedMediaUploadResult.new(
+      encrypted_data: readBytes,
+      original_hash: readBytes,
+      encrypted_hash: readBytes,
+      mime_type: readString,
+      filename: readString,
+      original_size: readU64,
+      encrypted_size: readU64,
+      dimensions: readOptionalSequenceu32,
+      blurhash: readOptionalstring,
+      nonce: readBytes
+    )
+  end
+
   # The Record type Group.
 
   def readTypeGroup
@@ -970,6 +1126,32 @@ class RustBufferStream
       max_past_epochs: readOptionalu32,
       epoch_snapshot_retention: readOptionalu32,
       snapshot_ttl_seconds: readOptionalu64
+    )
+  end
+
+  # The Record type MediaProcessingOptionsInput.
+
+  def readTypeMediaProcessingOptionsInput
+    MediaProcessingOptionsInput.new(
+      sanitize_exif: readOptionalbool,
+      generate_blurhash: readOptionalbool,
+      max_dimension: readOptionalu32,
+      max_file_size: readOptionalu64,
+      max_filename_length: readOptionalu64
+    )
+  end
+
+  # The Record type MediaReferenceRecord.
+
+  def readTypeMediaReferenceRecord
+    MediaReferenceRecord.new(
+      url: readString,
+      original_hash: readBytes,
+      mime_type: readString,
+      filename: readString,
+      dimensions: readOptionalSequenceu32,
+      scheme_version: readString,
+      nonce: readBytes
     )
   end
 
@@ -1131,6 +1313,20 @@ class RustBufferStream
     end
   end
 
+  # The Optional<T> type for bool.
+
+  def readOptionalbool
+    flag = unpack_from 1, 'c'
+
+    if flag == 0
+      return nil
+    elsif flag == 1
+      return readBool
+    else
+      raise InternalError, 'Unexpected flag byte for Optionalbool'
+    end
+  end
+
   # The Optional<T> type for string.
 
   def readOptionalstring
@@ -1243,6 +1439,20 @@ class RustBufferStream
     end
   end
 
+  # The Optional<T> type for Sequenceu32.
+
+  def readOptionalSequenceu32
+    flag = unpack_from 1, 'c'
+
+    if flag == 0
+      return nil
+    elsif flag == 1
+      return readSequenceu32
+    else
+      raise InternalError, 'Unexpected flag byte for OptionalSequenceu32'
+    end
+  end
+
   # The Optional<T> type for Sequencestring.
 
   def readOptionalSequencestring
@@ -1269,6 +1479,22 @@ class RustBufferStream
     else
       raise InternalError, 'Unexpected flag byte for OptionalSequenceSequencestring'
     end
+  end
+
+  # The Sequence<T> type for u32.
+
+  def readSequenceu32
+    count = unpack_from 4, 'l>'
+
+    raise InternalError, 'Unexpected negative sequence length' if count.negative?
+
+    items = []
+
+    count.times do
+      items.append readU32
+    end
+
+    items
   end
 
   # The Sequence<T> type for string.
@@ -1442,6 +1668,21 @@ class RustBufferBuilder
     self.write_Sequencestring(v.welcome_rumors_json)
   end
 
+  # The Record type EncryptedMediaUploadResult.
+
+  def write_TypeEncryptedMediaUploadResult(v)
+    self.write_Bytes(v.encrypted_data)
+    self.write_Bytes(v.original_hash)
+    self.write_Bytes(v.encrypted_hash)
+    self.write_String(v.mime_type)
+    self.write_String(v.filename)
+    self.write_U64(v.original_size)
+    self.write_U64(v.encrypted_size)
+    self.write_OptionalSequenceu32(v.dimensions)
+    self.write_Optionalstring(v.blurhash)
+    self.write_Bytes(v.nonce)
+  end
+
   # The Record type Group.
 
   def write_TypeGroup(v)
@@ -1513,6 +1754,28 @@ class RustBufferBuilder
     self.write_Optionalu32(v.max_past_epochs)
     self.write_Optionalu32(v.epoch_snapshot_retention)
     self.write_Optionalu64(v.snapshot_ttl_seconds)
+  end
+
+  # The Record type MediaProcessingOptionsInput.
+
+  def write_TypeMediaProcessingOptionsInput(v)
+    self.write_Optionalbool(v.sanitize_exif)
+    self.write_Optionalbool(v.generate_blurhash)
+    self.write_Optionalu32(v.max_dimension)
+    self.write_Optionalu64(v.max_file_size)
+    self.write_Optionalu64(v.max_filename_length)
+  end
+
+  # The Record type MediaReferenceRecord.
+
+  def write_TypeMediaReferenceRecord(v)
+    self.write_String(v.url)
+    self.write_Bytes(v.original_hash)
+    self.write_String(v.mime_type)
+    self.write_String(v.filename)
+    self.write_OptionalSequenceu32(v.dimensions)
+    self.write_String(v.scheme_version)
+    self.write_Bytes(v.nonce)
   end
 
   # The Record type Message.
@@ -1620,6 +1883,17 @@ class RustBufferBuilder
     end
   end
 
+  # The Optional<T> type for bool.
+
+  def write_Optionalbool(v)
+    if v.nil?
+      pack_into(1, 'c', 0)
+    else
+      pack_into(1, 'c', 1)
+      self.write_Bool(v)
+    end
+  end
+
   # The Optional<T> type for string.
 
   def write_Optionalstring(v)
@@ -1708,6 +1982,17 @@ class RustBufferBuilder
     end
   end
 
+  # The Optional<T> type for Sequenceu32.
+
+  def write_OptionalSequenceu32(v)
+    if v.nil?
+      pack_into(1, 'c', 0)
+    else
+      pack_into(1, 'c', 1)
+      self.write_Sequenceu32(v)
+    end
+  end
+
   # The Optional<T> type for Sequencestring.
 
   def write_OptionalSequencestring(v)
@@ -1727,6 +2012,16 @@ class RustBufferBuilder
     else
       pack_into(1, 'c', 1)
       self.write_SequenceSequencestring(v)
+    end
+  end
+
+  # The Sequence<T> type for u32.
+
+  def write_Sequenceu32(items)
+    pack_into(4, 'l>', items.size)
+
+    items.each do |item|
+      self.write_U32(item)
     end
   end
 
@@ -1974,6 +2269,9 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_key_package_for_event_with_options,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, :int8, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_media_imeta_tag,
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_message,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, :uint16, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
@@ -1983,6 +2281,15 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_decline_welcome_json,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     :void
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_decrypt_media_from_download,
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_encrypt_media_for_upload,
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_encrypt_media_for_upload_with_options,
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_group,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
@@ -2021,6 +2328,9 @@ module UniFFILib
     :void
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_parse_key_package,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_parse_media_imeta_tag,
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_process_message,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
@@ -2109,6 +2419,9 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_create_key_package_for_event_with_options,
     [RustCallStatus.by_ref],
     :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_create_media_imeta_tag,
+    [RustCallStatus.by_ref],
+    :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_create_message,
     [RustCallStatus.by_ref],
     :uint16
@@ -2116,6 +2429,15 @@ module UniFFILib
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_decline_welcome_json,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_decrypt_media_from_download,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_encrypt_media_for_upload,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_encrypt_media_for_upload_with_options,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_group,
@@ -2155,6 +2477,9 @@ module UniFFILib
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_parse_key_package,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_parse_media_imeta_tag,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_process_message,
@@ -2706,6 +3031,59 @@ class CreateGroupResult
   end
 end
   
+  # Record type EncryptedMediaUploadResult
+class EncryptedMediaUploadResult
+  attr_reader :encrypted_data, :original_hash, :encrypted_hash, :mime_type, :filename, :original_size, :encrypted_size, :dimensions, :blurhash, :nonce
+
+  def initialize(encrypted_data:, original_hash:, encrypted_hash:, mime_type:, filename:, original_size:, encrypted_size:, dimensions:, blurhash:, nonce:)
+    @encrypted_data = encrypted_data
+    @original_hash = original_hash
+    @encrypted_hash = encrypted_hash
+    @mime_type = mime_type
+    @filename = filename
+    @original_size = original_size
+    @encrypted_size = encrypted_size
+    @dimensions = dimensions
+    @blurhash = blurhash
+    @nonce = nonce
+  end
+
+  def ==(other)
+    if @encrypted_data != other.encrypted_data
+      return false
+    end
+    if @original_hash != other.original_hash
+      return false
+    end
+    if @encrypted_hash != other.encrypted_hash
+      return false
+    end
+    if @mime_type != other.mime_type
+      return false
+    end
+    if @filename != other.filename
+      return false
+    end
+    if @original_size != other.original_size
+      return false
+    end
+    if @encrypted_size != other.encrypted_size
+      return false
+    end
+    if @dimensions != other.dimensions
+      return false
+    end
+    if @blurhash != other.blurhash
+      return false
+    end
+    if @nonce != other.nonce
+      return false
+    end
+
+    true
+  end
+end
+  
   # Record type Group
 class Group
   attr_reader :mls_group_id, :nostr_group_id, :name, :description, :image_hash, :image_key, :image_nonce, :admin_pubkeys, :last_message_id, :last_message_at, :last_message_processed_at, :epoch, :state, :self_update_state
@@ -2949,6 +3327,80 @@ class MdkConfig
       return false
     end
     if @snapshot_ttl_seconds != other.snapshot_ttl_seconds
+      return false
+    end
+
+    true
+  end
+end
+  
+  # Record type MediaProcessingOptionsInput
+class MediaProcessingOptionsInput
+  attr_reader :sanitize_exif, :generate_blurhash, :max_dimension, :max_file_size, :max_filename_length
+
+  def initialize(sanitize_exif:, generate_blurhash:, max_dimension:, max_file_size:, max_filename_length:)
+    @sanitize_exif = sanitize_exif
+    @generate_blurhash = generate_blurhash
+    @max_dimension = max_dimension
+    @max_file_size = max_file_size
+    @max_filename_length = max_filename_length
+  end
+
+  def ==(other)
+    if @sanitize_exif != other.sanitize_exif
+      return false
+    end
+    if @generate_blurhash != other.generate_blurhash
+      return false
+    end
+    if @max_dimension != other.max_dimension
+      return false
+    end
+    if @max_file_size != other.max_file_size
+      return false
+    end
+    if @max_filename_length != other.max_filename_length
+      return false
+    end
+
+    true
+  end
+end
+  
+  # Record type MediaReferenceRecord
+class MediaReferenceRecord
+  attr_reader :url, :original_hash, :mime_type, :filename, :dimensions, :scheme_version, :nonce
+
+  def initialize(url:, original_hash:, mime_type:, filename:, dimensions:, scheme_version:, nonce:)
+    @url = url
+    @original_hash = original_hash
+    @mime_type = mime_type
+    @filename = filename
+    @dimensions = dimensions
+    @scheme_version = scheme_version
+    @nonce = nonce
+  end
+
+  def ==(other)
+    if @url != other.url
+      return false
+    end
+    if @original_hash != other.original_hash
+      return false
+    end
+    if @mime_type != other.mime_type
+      return false
+    end
+    if @filename != other.filename
+      return false
+    end
+    if @dimensions != other.dimensions
+      return false
+    end
+    if @scheme_version != other.scheme_version
+      return false
+    end
+    if @nonce != other.nonce
       return false
     end
 
@@ -3321,6 +3773,16 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_key_package_for_event_with_options,uniffi_clone_handle(),RustBuffer.allocFromString(public_key),RustBuffer.alloc_from_Sequencestring(relays),(protected ? 1 : 0))
     return result.consumeIntoTypeKeyPackageResult
   end
+  def create_media_imeta_tag(mls_group_id, upload, uploaded_url)
+        mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
+        
+        upload = upload
+        RustBuffer.check_lower_TypeEncryptedMediaUploadResult(upload)
+        uploaded_url = MdkUniffi::uniffi_utf8(uploaded_url)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_media_imeta_tag,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_TypeEncryptedMediaUploadResult(upload),RustBuffer.allocFromString(uploaded_url))
+    return result.consumeIntoSequenceSequencestring
+  end
   def create_message(mls_group_id, sender_public_key, content, kind, tags)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
         
@@ -3347,6 +3809,42 @@ end
       MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_decline_welcome_json,uniffi_clone_handle(),RustBuffer.allocFromString(welcome_json))
   end
   
+  def decrypt_media_from_download(mls_group_id, encrypted_data, reference)
+        mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
+        
+        encrypted_data = MdkUniffi::uniffi_bytes(encrypted_data)
+        
+        reference = reference
+        RustBuffer.check_lower_TypeMediaReferenceRecord(reference)
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_decrypt_media_from_download,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.allocFromBytes(encrypted_data),RustBuffer.alloc_from_TypeMediaReferenceRecord(reference))
+    return result.consumeIntoBytes
+  end
+  def encrypt_media_for_upload(mls_group_id, data, mime_type, filename)
+        mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
+        
+        data = MdkUniffi::uniffi_bytes(data)
+        
+        mime_type = MdkUniffi::uniffi_utf8(mime_type)
+        
+        filename = MdkUniffi::uniffi_utf8(filename)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_encrypt_media_for_upload,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.allocFromBytes(data),RustBuffer.allocFromString(mime_type),RustBuffer.allocFromString(filename))
+    return result.consumeIntoTypeEncryptedMediaUploadResult
+  end
+  def encrypt_media_for_upload_with_options(mls_group_id, data, mime_type, filename, options)
+        mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
+        
+        data = MdkUniffi::uniffi_bytes(data)
+        
+        mime_type = MdkUniffi::uniffi_utf8(mime_type)
+        
+        filename = MdkUniffi::uniffi_utf8(filename)
+        
+        options = options
+        RustBuffer.check_lower_TypeMediaProcessingOptionsInput(options)
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_encrypt_media_for_upload_with_options,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.allocFromBytes(data),RustBuffer.allocFromString(mime_type),RustBuffer.allocFromString(filename),RustBuffer.alloc_from_TypeMediaProcessingOptionsInput(options))
+    return result.consumeIntoTypeEncryptedMediaUploadResult
+  end
   def get_group(mls_group_id)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
         
@@ -3434,6 +3932,14 @@ end
         
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_parse_key_package,uniffi_clone_handle(),RustBuffer.allocFromString(event_json))
     return result.consumeIntoString
+  end
+  def parse_media_imeta_tag(mls_group_id, imeta_tag)
+        mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
+        
+        imeta_tag = imeta_tag.map { |v| v.map { |v| MdkUniffi::uniffi_utf8(v) } }
+        RustBuffer.check_lower_SequenceSequencestring(imeta_tag)
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_parse_media_imeta_tag,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_SequenceSequencestring(imeta_tag))
+    return result.consumeIntoTypeMediaReferenceRecord
   end
   def process_message(event_json)
         event_json = MdkUniffi::uniffi_utf8(event_json)
