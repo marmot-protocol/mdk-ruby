@@ -158,6 +158,7 @@ end
     
     RustBuffer.check_lower_OptionalSequenceu32(v.dimensions)
     RustBuffer.check_lower_Optionalstring(v.blurhash)
+    RustBuffer.check_lower_Optionalstring(v.thumbhash)
     
   end
 
@@ -244,6 +245,7 @@ end
     
     RustBuffer.check_lower_OptionalTypeImageDimensions(v.dimensions)
     RustBuffer.check_lower_Optionalstring(v.blurhash)
+    RustBuffer.check_lower_Optionalstring(v.thumbhash)
   end
 
   def self.alloc_from_TypeGroupImageUpload(v)
@@ -284,6 +286,8 @@ end
   def self.check_lower_TypeKeyPackageResult(v)
     
     RustBuffer.check_lower_SequenceSequencestring(v.tags)
+    RustBuffer.check_lower_SequenceSequencestring(v.tags_legacy)
+    
     
   end
 
@@ -297,6 +301,26 @@ end
   def consumeIntoTypeKeyPackageResult
     consumeWithStream do |stream|
       return stream.readTypeKeyPackageResult
+    end
+  end
+
+  # The Record type LeafMapEntry.
+
+  def self.check_lower_TypeLeafMapEntry(v)
+    
+    
+  end
+
+  def self.alloc_from_TypeLeafMapEntry(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeLeafMapEntry(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeLeafMapEntry
+    consumeWithStream do |stream|
+      return stream.readTypeLeafMapEntry
     end
   end
 
@@ -330,6 +354,7 @@ end
   def self.check_lower_TypeMediaProcessingOptionsInput(v)
     RustBuffer.check_lower_Optionalbool(v.sanitize_exif)
     RustBuffer.check_lower_Optionalbool(v.generate_blurhash)
+    RustBuffer.check_lower_Optionalbool(v.generate_thumbhash)
     RustBuffer.check_lower_Optionalu32(v.max_dimension)
     RustBuffer.check_lower_Optionalu64(v.max_file_size)
     RustBuffer.check_lower_Optionalu64(v.max_filename_length)
@@ -401,6 +426,89 @@ end
     end
   end
 
+  # The Record type ProcessMessageWithContextResult.
+
+  def self.check_lower_TypeProcessMessageWithContextResult(v)
+    RustBuffer.check_lower_TypeProcessMessageResult(v.result)
+    RustBuffer.check_lower_Optionalu32(v.sender_leaf_index)
+  end
+
+  def self.alloc_from_TypeProcessMessageWithContextResult(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeProcessMessageWithContextResult(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeProcessMessageWithContextResult
+    consumeWithStream do |stream|
+      return stream.readTypeProcessMessageWithContextResult
+    end
+  end
+
+  # The Record type UniffiLeafNodeInfo.
+
+  def self.check_lower_TypeUniffiLeafNodeInfo(v)
+    
+    
+    
+    
+  end
+
+  def self.alloc_from_TypeUniffiLeafNodeInfo(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeUniffiLeafNodeInfo(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeUniffiLeafNodeInfo
+    consumeWithStream do |stream|
+      return stream.readTypeUniffiLeafNodeInfo
+    end
+  end
+
+  # The Record type UniffiPendingMemberChanges.
+
+  def self.check_lower_TypeUniffiPendingMemberChanges(v)
+    RustBuffer.check_lower_Sequencestring(v.additions)
+    RustBuffer.check_lower_Sequencestring(v.removals)
+  end
+
+  def self.alloc_from_TypeUniffiPendingMemberChanges(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeUniffiPendingMemberChanges(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeUniffiPendingMemberChanges
+    consumeWithStream do |stream|
+      return stream.readTypeUniffiPendingMemberChanges
+    end
+  end
+
+  # The Record type UniffiRatchetTreeInfo.
+
+  def self.check_lower_TypeUniffiRatchetTreeInfo(v)
+    
+    
+    RustBuffer.check_lower_SequenceTypeUniffiLeafNodeInfo(v.leaf_nodes)
+  end
+
+  def self.alloc_from_TypeUniffiRatchetTreeInfo(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeUniffiRatchetTreeInfo(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeUniffiRatchetTreeInfo
+    consumeWithStream do |stream|
+      return stream.readTypeUniffiRatchetTreeInfo
+    end
+  end
+
   # The Record type UpdateGroupResult.
 
   def self.check_lower_TypeUpdateGroupResult(v)
@@ -454,6 +562,25 @@ end
       return stream.readTypeWelcome
     end
   end
+
+  # The Enum type MdkProposalType.
+
+  def self.check_lower_TypeMdkProposalType(v)
+  end
+
+  def self.alloc_from_TypeMdkProposalType(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeMdkProposalType(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeMdkProposalType
+    consumeWithStream do |stream|
+      return stream.readTypeMdkProposalType
+    end
+  end
+  
 
   
 
@@ -865,6 +992,27 @@ end
     end
   end
 
+  # The Sequence<T> type for TypeLeafMapEntry.
+
+  def self.check_lower_SequenceTypeLeafMapEntry(v)
+    v.each do |item|
+      RustBuffer.check_lower_TypeLeafMapEntry(item)
+    end
+  end
+
+  def self.alloc_from_SequenceTypeLeafMapEntry(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_SequenceTypeLeafMapEntry(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoSequenceTypeLeafMapEntry
+    consumeWithStream do |stream|
+      return stream.readSequenceTypeLeafMapEntry
+    end
+  end
+
   # The Sequence<T> type for TypeMessage.
 
   def self.check_lower_SequenceTypeMessage(v)
@@ -886,6 +1034,27 @@ end
     end
   end
 
+  # The Sequence<T> type for TypeUniffiLeafNodeInfo.
+
+  def self.check_lower_SequenceTypeUniffiLeafNodeInfo(v)
+    v.each do |item|
+      RustBuffer.check_lower_TypeUniffiLeafNodeInfo(item)
+    end
+  end
+
+  def self.alloc_from_SequenceTypeUniffiLeafNodeInfo(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_SequenceTypeUniffiLeafNodeInfo(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoSequenceTypeUniffiLeafNodeInfo
+    consumeWithStream do |stream|
+      return stream.readSequenceTypeUniffiLeafNodeInfo
+    end
+  end
+
   # The Sequence<T> type for TypeWelcome.
 
   def self.check_lower_SequenceTypeWelcome(v)
@@ -904,6 +1073,27 @@ end
   def consumeIntoSequenceTypeWelcome
     consumeWithStream do |stream|
       return stream.readSequenceTypeWelcome
+    end
+  end
+
+  # The Sequence<T> type for TypeMdkProposalType.
+
+  def self.check_lower_SequenceTypeMdkProposalType(v)
+    v.each do |item|
+      RustBuffer.check_lower_TypeMdkProposalType(item)
+    end
+  end
+
+  def self.alloc_from_SequenceTypeMdkProposalType(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_SequenceTypeMdkProposalType(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoSequenceTypeMdkProposalType
+    consumeWithStream do |stream|
+      return stream.readSequenceTypeMdkProposalType
     end
   end
 
@@ -1040,6 +1230,7 @@ class RustBufferStream
       encrypted_size: readU64,
       dimensions: readOptionalSequenceu32,
       blurhash: readOptionalstring,
+      thumbhash: readOptionalstring,
       nonce: readBytes
     )
   end
@@ -1092,7 +1283,8 @@ class RustBufferStream
       encrypted_size: readU64,
       mime_type: readString,
       dimensions: readOptionalTypeImageDimensions,
-      blurhash: readOptionalstring
+      blurhash: readOptionalstring,
+      thumbhash: readOptionalstring
     )
   end
 
@@ -1111,7 +1303,18 @@ class RustBufferStream
     KeyPackageResult.new(
       key_package: readString,
       tags: readSequenceSequencestring,
-      hash_ref: readBytes
+      tags_legacy: readSequenceSequencestring,
+      hash_ref: readBytes,
+      d_tag: readString
+    )
+  end
+
+  # The Record type LeafMapEntry.
+
+  def readTypeLeafMapEntry
+    LeafMapEntry.new(
+      leaf_index: readU32,
+      public_key: readString
     )
   end
 
@@ -1135,6 +1338,7 @@ class RustBufferStream
     MediaProcessingOptionsInput.new(
       sanitize_exif: readOptionalbool,
       generate_blurhash: readOptionalbool,
+      generate_thumbhash: readOptionalbool,
       max_dimension: readOptionalu32,
       max_file_size: readOptionalu64,
       max_filename_length: readOptionalu64
@@ -1172,6 +1376,45 @@ class RustBufferStream
     )
   end
 
+  # The Record type ProcessMessageWithContextResult.
+
+  def readTypeProcessMessageWithContextResult
+    ProcessMessageWithContextResult.new(
+      result: readTypeProcessMessageResult,
+      sender_leaf_index: readOptionalu32
+    )
+  end
+
+  # The Record type UniffiLeafNodeInfo.
+
+  def readTypeUniffiLeafNodeInfo
+    UniffiLeafNodeInfo.new(
+      index: readU32,
+      encryption_key: readString,
+      signature_key: readString,
+      credential_identity: readString
+    )
+  end
+
+  # The Record type UniffiPendingMemberChanges.
+
+  def readTypeUniffiPendingMemberChanges
+    UniffiPendingMemberChanges.new(
+      additions: readSequencestring,
+      removals: readSequencestring
+    )
+  end
+
+  # The Record type UniffiRatchetTreeInfo.
+
+  def readTypeUniffiRatchetTreeInfo
+    UniffiRatchetTreeInfo.new(
+      tree_hash: readString,
+      serialized_tree: readString,
+      leaf_nodes: readSequenceTypeUniffiLeafNodeInfo
+    )
+  end
+
   # The Record type UpdateGroupResult.
 
   def readTypeUpdateGroupResult
@@ -1203,6 +1446,25 @@ class RustBufferStream
       wrapper_event_id: readString
     )
   end
+
+  
+  
+  # The Enum type MdkProposalType.
+
+  def readTypeMdkProposalType
+    variant = unpack_from 4, 'l>'
+    
+    if variant == 1
+      return MdkProposalType::SELF_REMOVE
+    end
+    if variant == 2
+      return MdkProposalType::UNKNOWN
+    end
+
+    raise InternalError, 'Unexpected variant tag for TypeMdkProposalType'
+  end
+
+  
 
   
 
@@ -1529,6 +1791,22 @@ class RustBufferStream
     items
   end
 
+  # The Sequence<T> type for TypeLeafMapEntry.
+
+  def readSequenceTypeLeafMapEntry
+    count = unpack_from 4, 'l>'
+
+    raise InternalError, 'Unexpected negative sequence length' if count.negative?
+
+    items = []
+
+    count.times do
+      items.append readTypeLeafMapEntry
+    end
+
+    items
+  end
+
   # The Sequence<T> type for TypeMessage.
 
   def readSequenceTypeMessage
@@ -1545,6 +1823,22 @@ class RustBufferStream
     items
   end
 
+  # The Sequence<T> type for TypeUniffiLeafNodeInfo.
+
+  def readSequenceTypeUniffiLeafNodeInfo
+    count = unpack_from 4, 'l>'
+
+    raise InternalError, 'Unexpected negative sequence length' if count.negative?
+
+    items = []
+
+    count.times do
+      items.append readTypeUniffiLeafNodeInfo
+    end
+
+    items
+  end
+
   # The Sequence<T> type for TypeWelcome.
 
   def readSequenceTypeWelcome
@@ -1556,6 +1850,22 @@ class RustBufferStream
 
     count.times do
       items.append readTypeWelcome
+    end
+
+    items
+  end
+
+  # The Sequence<T> type for TypeMdkProposalType.
+
+  def readSequenceTypeMdkProposalType
+    count = unpack_from 4, 'l>'
+
+    raise InternalError, 'Unexpected negative sequence length' if count.negative?
+
+    items = []
+
+    count.times do
+      items.append readTypeMdkProposalType
     end
 
     items
@@ -1680,6 +1990,7 @@ class RustBufferBuilder
     self.write_U64(v.encrypted_size)
     self.write_OptionalSequenceu32(v.dimensions)
     self.write_Optionalstring(v.blurhash)
+    self.write_Optionalstring(v.thumbhash)
     self.write_Bytes(v.nonce)
   end
 
@@ -1727,6 +2038,7 @@ class RustBufferBuilder
     self.write_String(v.mime_type)
     self.write_OptionalTypeImageDimensions(v.dimensions)
     self.write_Optionalstring(v.blurhash)
+    self.write_Optionalstring(v.thumbhash)
   end
 
   # The Record type ImageDimensions.
@@ -1741,7 +2053,16 @@ class RustBufferBuilder
   def write_TypeKeyPackageResult(v)
     self.write_String(v.key_package)
     self.write_SequenceSequencestring(v.tags)
+    self.write_SequenceSequencestring(v.tags_legacy)
     self.write_Bytes(v.hash_ref)
+    self.write_String(v.d_tag)
+  end
+
+  # The Record type LeafMapEntry.
+
+  def write_TypeLeafMapEntry(v)
+    self.write_U32(v.leaf_index)
+    self.write_String(v.public_key)
   end
 
   # The Record type MdkConfig.
@@ -1761,6 +2082,7 @@ class RustBufferBuilder
   def write_TypeMediaProcessingOptionsInput(v)
     self.write_Optionalbool(v.sanitize_exif)
     self.write_Optionalbool(v.generate_blurhash)
+    self.write_Optionalbool(v.generate_thumbhash)
     self.write_Optionalu32(v.max_dimension)
     self.write_Optionalu64(v.max_file_size)
     self.write_Optionalu64(v.max_filename_length)
@@ -1793,6 +2115,37 @@ class RustBufferBuilder
     self.write_String(v.state)
   end
 
+  # The Record type ProcessMessageWithContextResult.
+
+  def write_TypeProcessMessageWithContextResult(v)
+    self.write_TypeProcessMessageResult(v.result)
+    self.write_Optionalu32(v.sender_leaf_index)
+  end
+
+  # The Record type UniffiLeafNodeInfo.
+
+  def write_TypeUniffiLeafNodeInfo(v)
+    self.write_U32(v.index)
+    self.write_String(v.encryption_key)
+    self.write_String(v.signature_key)
+    self.write_String(v.credential_identity)
+  end
+
+  # The Record type UniffiPendingMemberChanges.
+
+  def write_TypeUniffiPendingMemberChanges(v)
+    self.write_Sequencestring(v.additions)
+    self.write_Sequencestring(v.removals)
+  end
+
+  # The Record type UniffiRatchetTreeInfo.
+
+  def write_TypeUniffiRatchetTreeInfo(v)
+    self.write_String(v.tree_hash)
+    self.write_String(v.serialized_tree)
+    self.write_SequenceTypeUniffiLeafNodeInfo(v.leaf_nodes)
+  end
+
   # The Record type UpdateGroupResult.
 
   def write_TypeUpdateGroupResult(v)
@@ -1820,6 +2173,13 @@ class RustBufferBuilder
     self.write_String(v.state)
     self.write_String(v.wrapper_event_id)
   end
+
+  # The Enum type MdkProposalType.
+
+  def write_TypeMdkProposalType(v)
+    pack_into(4, 'l>', v)
+ end
+   
 
   
 
@@ -2045,6 +2405,16 @@ class RustBufferBuilder
     end
   end
 
+  # The Sequence<T> type for TypeLeafMapEntry.
+
+  def write_SequenceTypeLeafMapEntry(items)
+    pack_into(4, 'l>', items.size)
+
+    items.each do |item|
+      self.write_TypeLeafMapEntry(item)
+    end
+  end
+
   # The Sequence<T> type for TypeMessage.
 
   def write_SequenceTypeMessage(items)
@@ -2055,6 +2425,16 @@ class RustBufferBuilder
     end
   end
 
+  # The Sequence<T> type for TypeUniffiLeafNodeInfo.
+
+  def write_SequenceTypeUniffiLeafNodeInfo(items)
+    pack_into(4, 'l>', items.size)
+
+    items.each do |item|
+      self.write_TypeUniffiLeafNodeInfo(item)
+    end
+  end
+
   # The Sequence<T> type for TypeWelcome.
 
   def write_SequenceTypeWelcome(items)
@@ -2062,6 +2442,16 @@ class RustBufferBuilder
 
     items.each do |item|
       self.write_TypeWelcome(item)
+    end
+  end
+
+  # The Sequence<T> type for TypeMdkProposalType.
+
+  def write_SequenceTypeMdkProposalType(items)
+    pack_into(4, 'l>', items.size)
+
+    items.each do |item|
+      self.write_TypeMdkProposalType(item)
     end
   end
 
@@ -2122,6 +2512,7 @@ CALL_ERROR = 1
 CALL_PANIC = 2
 
 
+
 module MdkUniffiError
   class Storage < StandardError
     def initialize()
@@ -2169,6 +2560,7 @@ end
 
 # Map error modules to the RustBuffer method name that reads them
 ERROR_MODULE_TO_READER_METHOD = {
+
 
   MdkUniffiError => :readTypeMdkUniffiError,
 
@@ -2273,7 +2665,7 @@ module UniFFILib
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_message,
-    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, :uint16, RustBuffer.by_value, RustCallStatus.by_ref],
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, :uint16, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_decline_welcome,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
@@ -2284,6 +2676,18 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_decrypt_media_from_download,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_delete_group,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    :void
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_delete_key_package_from_storage,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    :void
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_delete_key_package_from_storage_by_hash_ref,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    :void
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_delete_messages_for_group,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    :uint32
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_encrypt_media_for_upload,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
@@ -2311,10 +2715,19 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_ratchet_tree_info,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_relays,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_welcome,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_group_leaf_map,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_group_required_proposals,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_groups_needing_self_update,
@@ -2326,13 +2739,28 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_merge_pending_commit,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     :void
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_own_leaf_index,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    :uint32
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_parse_key_package,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_parse_media_imeta_tag,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_pending_added_members_pubkeys,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_pending_member_changes,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_pending_removed_members_pubkeys,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_process_message,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_process_message_with_context,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_process_welcome,
@@ -2340,6 +2768,9 @@ module UniFFILib
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_remove_members,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_self_demote,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_self_update,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
@@ -2356,17 +2787,20 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_func_derive_upload_keypair,
     [RustBuffer.by_value, :uint16, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_func_init_keyring_store,
+    [RustCallStatus.by_ref],
+    :void
   attach_function :uniffi_mdk_uniffi_fn_func_new_mdk,
     [RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
-    :uint64
-  attach_function :uniffi_mdk_uniffi_fn_func_new_mdk_unencrypted,
-    [RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     :uint64
   attach_function :uniffi_mdk_uniffi_fn_func_new_mdk_with_key,
     [RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     :uint64
   attach_function :uniffi_mdk_uniffi_fn_func_prepare_group_image_for_upload,
     [RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_func_prepare_group_image_for_upload_with_options,
+    [RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :ffi_mdk_uniffi_rustbuffer_alloc,
     [:uint64, RustCallStatus.by_ref],
@@ -2386,16 +2820,19 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_checksum_func_derive_upload_keypair,
     [RustCallStatus.by_ref],
     :uint16
-  attach_function :uniffi_mdk_uniffi_checksum_func_new_mdk,
+  attach_function :uniffi_mdk_uniffi_checksum_func_init_keyring_store,
     [RustCallStatus.by_ref],
     :uint16
-  attach_function :uniffi_mdk_uniffi_checksum_func_new_mdk_unencrypted,
+  attach_function :uniffi_mdk_uniffi_checksum_func_new_mdk,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_func_new_mdk_with_key,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_func_prepare_group_image_for_upload,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_func_prepare_group_image_for_upload_with_options,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_accept_welcome,
@@ -2434,6 +2871,18 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_decrypt_media_from_download,
     [RustCallStatus.by_ref],
     :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_delete_group,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_delete_key_package_from_storage,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_delete_key_package_from_storage_by_hash_ref,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_delete_messages_for_group,
+    [RustCallStatus.by_ref],
+    :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_encrypt_media_for_upload,
     [RustCallStatus.by_ref],
     :uint16
@@ -2461,10 +2910,19 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_pending_welcomes,
     [RustCallStatus.by_ref],
     :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_ratchet_tree_info,
+    [RustCallStatus.by_ref],
+    :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_relays,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_welcome,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_group_leaf_map,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_group_required_proposals,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_groups_needing_self_update,
@@ -2476,19 +2934,37 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_merge_pending_commit,
     [RustCallStatus.by_ref],
     :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_own_leaf_index,
+    [RustCallStatus.by_ref],
+    :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_parse_key_package,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_parse_media_imeta_tag,
     [RustCallStatus.by_ref],
     :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_pending_added_members_pubkeys,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_pending_member_changes,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_pending_removed_members_pubkeys,
+    [RustCallStatus.by_ref],
+    :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_process_message,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_process_message_with_context,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_process_welcome,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_remove_members,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_self_demote,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_self_update,
@@ -2507,6 +2983,17 @@ module UniFFILib
 end
 
   # Public interface members begin here.
+
+  
+  
+  
+
+class MdkProposalType
+  SELF_REMOVE = 1
+  UNKNOWN = 2
+  
+end
+
 
   
   
@@ -3033,9 +3520,9 @@ end
   
   # Record type EncryptedMediaUploadResult
 class EncryptedMediaUploadResult
-  attr_reader :encrypted_data, :original_hash, :encrypted_hash, :mime_type, :filename, :original_size, :encrypted_size, :dimensions, :blurhash, :nonce
+  attr_reader :encrypted_data, :original_hash, :encrypted_hash, :mime_type, :filename, :original_size, :encrypted_size, :dimensions, :blurhash, :thumbhash, :nonce
 
-  def initialize(encrypted_data:, original_hash:, encrypted_hash:, mime_type:, filename:, original_size:, encrypted_size:, dimensions:, blurhash:, nonce:)
+  def initialize(encrypted_data:, original_hash:, encrypted_hash:, mime_type:, filename:, original_size:, encrypted_size:, dimensions:, blurhash:, thumbhash:, nonce:)
     @encrypted_data = encrypted_data
     @original_hash = original_hash
     @encrypted_hash = encrypted_hash
@@ -3045,6 +3532,7 @@ class EncryptedMediaUploadResult
     @encrypted_size = encrypted_size
     @dimensions = dimensions
     @blurhash = blurhash
+    @thumbhash = thumbhash
     @nonce = nonce
   end
 
@@ -3074,6 +3562,9 @@ class EncryptedMediaUploadResult
       return false
     end
     if @blurhash != other.blurhash
+      return false
+    end
+    if @thumbhash != other.thumbhash
       return false
     end
     if @nonce != other.nonce
@@ -3196,9 +3687,9 @@ end
   
   # Record type GroupImageUpload
 class GroupImageUpload
-  attr_reader :encrypted_data, :encrypted_hash, :image_key, :image_nonce, :upload_secret_key, :original_size, :encrypted_size, :mime_type, :dimensions, :blurhash
+  attr_reader :encrypted_data, :encrypted_hash, :image_key, :image_nonce, :upload_secret_key, :original_size, :encrypted_size, :mime_type, :dimensions, :blurhash, :thumbhash
 
-  def initialize(encrypted_data:, encrypted_hash:, image_key:, image_nonce:, upload_secret_key:, original_size:, encrypted_size:, mime_type:, dimensions:, blurhash:)
+  def initialize(encrypted_data:, encrypted_hash:, image_key:, image_nonce:, upload_secret_key:, original_size:, encrypted_size:, mime_type:, dimensions:, blurhash:, thumbhash:)
     @encrypted_data = encrypted_data
     @encrypted_hash = encrypted_hash
     @image_key = image_key
@@ -3209,6 +3700,7 @@ class GroupImageUpload
     @mime_type = mime_type
     @dimensions = dimensions
     @blurhash = blurhash
+    @thumbhash = thumbhash
   end
 
   def ==(other)
@@ -3242,6 +3734,9 @@ class GroupImageUpload
     if @blurhash != other.blurhash
       return false
     end
+    if @thumbhash != other.thumbhash
+      return false
+    end
 
     true
   end
@@ -3270,12 +3765,14 @@ end
   
   # Record type KeyPackageResult
 class KeyPackageResult
-  attr_reader :key_package, :tags, :hash_ref
+  attr_reader :key_package, :tags, :tags_legacy, :hash_ref, :d_tag
 
-  def initialize(key_package:, tags:, hash_ref:)
+  def initialize(key_package:, tags:, tags_legacy:, hash_ref:, d_tag:)
     @key_package = key_package
     @tags = tags
+    @tags_legacy = tags_legacy
     @hash_ref = hash_ref
+    @d_tag = d_tag
   end
 
   def ==(other)
@@ -3285,7 +3782,34 @@ class KeyPackageResult
     if @tags != other.tags
       return false
     end
+    if @tags_legacy != other.tags_legacy
+      return false
+    end
     if @hash_ref != other.hash_ref
+      return false
+    end
+    if @d_tag != other.d_tag
+      return false
+    end
+
+    true
+  end
+end
+  
+  # Record type LeafMapEntry
+class LeafMapEntry
+  attr_reader :leaf_index, :public_key
+
+  def initialize(leaf_index:, public_key:)
+    @leaf_index = leaf_index
+    @public_key = public_key
+  end
+
+  def ==(other)
+    if @leaf_index != other.leaf_index
+      return false
+    end
+    if @public_key != other.public_key
       return false
     end
 
@@ -3336,11 +3860,12 @@ end
   
   # Record type MediaProcessingOptionsInput
 class MediaProcessingOptionsInput
-  attr_reader :sanitize_exif, :generate_blurhash, :max_dimension, :max_file_size, :max_filename_length
+  attr_reader :sanitize_exif, :generate_blurhash, :generate_thumbhash, :max_dimension, :max_file_size, :max_filename_length
 
-  def initialize(sanitize_exif:, generate_blurhash:, max_dimension:, max_file_size:, max_filename_length:)
+  def initialize(sanitize_exif:, generate_blurhash:, generate_thumbhash:, max_dimension:, max_file_size:, max_filename_length:)
     @sanitize_exif = sanitize_exif
     @generate_blurhash = generate_blurhash
+    @generate_thumbhash = generate_thumbhash
     @max_dimension = max_dimension
     @max_file_size = max_file_size
     @max_filename_length = max_filename_length
@@ -3351,6 +3876,9 @@ class MediaProcessingOptionsInput
       return false
     end
     if @generate_blurhash != other.generate_blurhash
+      return false
+    end
+    if @generate_thumbhash != other.generate_thumbhash
       return false
     end
     if @max_dimension != other.max_dimension
@@ -3454,6 +3982,102 @@ class Message
       return false
     end
     if @state != other.state
+      return false
+    end
+
+    true
+  end
+end
+  
+  # Record type ProcessMessageWithContextResult
+class ProcessMessageWithContextResult
+  attr_reader :result, :sender_leaf_index
+
+  def initialize(result:, sender_leaf_index:)
+    @result = result
+    @sender_leaf_index = sender_leaf_index
+  end
+
+  def ==(other)
+    if @result != other.result
+      return false
+    end
+    if @sender_leaf_index != other.sender_leaf_index
+      return false
+    end
+
+    true
+  end
+end
+  
+  # Record type UniffiLeafNodeInfo
+class UniffiLeafNodeInfo
+  attr_reader :index, :encryption_key, :signature_key, :credential_identity
+
+  def initialize(index:, encryption_key:, signature_key:, credential_identity:)
+    @index = index
+    @encryption_key = encryption_key
+    @signature_key = signature_key
+    @credential_identity = credential_identity
+  end
+
+  def ==(other)
+    if @index != other.index
+      return false
+    end
+    if @encryption_key != other.encryption_key
+      return false
+    end
+    if @signature_key != other.signature_key
+      return false
+    end
+    if @credential_identity != other.credential_identity
+      return false
+    end
+
+    true
+  end
+end
+  
+  # Record type UniffiPendingMemberChanges
+class UniffiPendingMemberChanges
+  attr_reader :additions, :removals
+
+  def initialize(additions:, removals:)
+    @additions = additions
+    @removals = removals
+  end
+
+  def ==(other)
+    if @additions != other.additions
+      return false
+    end
+    if @removals != other.removals
+      return false
+    end
+
+    true
+  end
+end
+  
+  # Record type UniffiRatchetTreeInfo
+class UniffiRatchetTreeInfo
+  attr_reader :tree_hash, :serialized_tree, :leaf_nodes
+
+  def initialize(tree_hash:, serialized_tree:, leaf_nodes:)
+    @tree_hash = tree_hash
+    @serialized_tree = serialized_tree
+    @leaf_nodes = leaf_nodes
+  end
+
+  def ==(other)
+    if @tree_hash != other.tree_hash
+      return false
+    end
+    if @serialized_tree != other.serialized_tree
+      return false
+    end
+    if @leaf_nodes != other.leaf_nodes
       return false
     end
 
@@ -3599,6 +4223,13 @@ end
   
   
 
+def self.init_keyring_store()
+  MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_init_keyring_store,)
+end
+
+  
+  
+
 def self.new_mdk(db_path, service_id, db_key_id, config)
     db_path = MdkUniffi::uniffi_utf8(db_path)
     
@@ -3613,21 +4244,6 @@ def self.new_mdk(db_path, service_id, db_key_id, config)
     RustBuffer.check_lower_OptionalTypeMdkConfig(config)
     
   result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_new_mdk,RustBuffer.allocFromString(db_path),RustBuffer.allocFromString(service_id),RustBuffer.allocFromString(db_key_id),RustBuffer.alloc_from_OptionalTypeMdkConfig(config))
-  return Mdk.uniffi_allocate(result)
-end
-
-
-  
-  
-
-def self.new_mdk_unencrypted(db_path, config)
-    db_path = MdkUniffi::uniffi_utf8(db_path)
-    
-    
-    config = (config ? config : nil)
-    RustBuffer.check_lower_OptionalTypeMdkConfig(config)
-    
-  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_new_mdk_unencrypted,RustBuffer.allocFromString(db_path),RustBuffer.alloc_from_OptionalTypeMdkConfig(config))
   return Mdk.uniffi_allocate(result)
 end
 
@@ -3661,6 +4277,24 @@ def self.prepare_group_image_for_upload(image_data, mime_type)
     
     
   result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_prepare_group_image_for_upload,RustBuffer.allocFromBytes(image_data),RustBuffer.allocFromString(mime_type))
+  return result.consumeIntoTypeGroupImageUpload
+end
+
+
+  
+  
+
+def self.prepare_group_image_for_upload_with_options(image_data, mime_type, options)
+    image_data = MdkUniffi::uniffi_bytes(image_data)
+    
+    
+    mime_type = MdkUniffi::uniffi_utf8(mime_type)
+    
+    
+    options = options
+    RustBuffer.check_lower_TypeMediaProcessingOptionsInput(options)
+    
+  result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_func_prepare_group_image_for_upload_with_options,RustBuffer.allocFromBytes(image_data),RustBuffer.allocFromString(mime_type),RustBuffer.alloc_from_TypeMediaProcessingOptionsInput(options))
   return result.consumeIntoTypeGroupImageUpload
 end
 
@@ -3783,7 +4417,7 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_media_imeta_tag,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_TypeEncryptedMediaUploadResult(upload),RustBuffer.allocFromString(uploaded_url))
     return result.consumeIntoSequenceSequencestring
   end
-  def create_message(mls_group_id, sender_public_key, content, kind, tags)
+  def create_message(mls_group_id, sender_public_key, content, kind, tags, event_tags)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
         
         sender_public_key = MdkUniffi::uniffi_utf8(sender_public_key)
@@ -3794,7 +4428,9 @@ end
         
         tags = (tags ? tags.map { |v| v.map { |v| MdkUniffi::uniffi_utf8(v) } } : nil)
         RustBuffer.check_lower_OptionalSequenceSequencestring(tags)
-    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_message,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.allocFromString(sender_public_key),RustBuffer.allocFromString(content),kind,RustBuffer.alloc_from_OptionalSequenceSequencestring(tags))
+        event_tags = (event_tags ? event_tags.map { |v| v.map { |v| MdkUniffi::uniffi_utf8(v) } } : nil)
+        RustBuffer.check_lower_OptionalSequenceSequencestring(event_tags)
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_message,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.allocFromString(sender_public_key),RustBuffer.allocFromString(content),kind,RustBuffer.alloc_from_OptionalSequenceSequencestring(tags),RustBuffer.alloc_from_OptionalSequenceSequencestring(event_tags))
     return result.consumeIntoString
   end
   def decline_welcome(welcome)
@@ -3818,6 +4454,30 @@ end
         RustBuffer.check_lower_TypeMediaReferenceRecord(reference)
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_decrypt_media_from_download,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.allocFromBytes(encrypted_data),RustBuffer.alloc_from_TypeMediaReferenceRecord(reference))
     return result.consumeIntoBytes
+  end
+  def delete_group(mls_group_id)
+        mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
+        
+      MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_delete_group,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
+  end
+  
+  def delete_key_package_from_storage(key_package_event_json)
+        key_package_event_json = MdkUniffi::uniffi_utf8(key_package_event_json)
+        
+      MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_delete_key_package_from_storage,uniffi_clone_handle(),RustBuffer.allocFromString(key_package_event_json))
+  end
+  
+  def delete_key_package_from_storage_by_hash_ref(hash_ref)
+        hash_ref = MdkUniffi::uniffi_bytes(hash_ref)
+        
+      MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_delete_key_package_from_storage_by_hash_ref,uniffi_clone_handle(),RustBuffer.allocFromBytes(hash_ref))
+  end
+  
+  def delete_messages_for_group(mls_group_id)
+        mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_delete_messages_for_group,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
+    return result.to_i
   end
   def encrypt_media_for_upload(mls_group_id, data, mime_type, filename)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
@@ -3897,6 +4557,12 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_pending_welcomes,uniffi_clone_handle(),RustBuffer.alloc_from_Optionalu32(limit),RustBuffer.alloc_from_Optionalu32(offset))
     return result.consumeIntoSequenceTypeWelcome
   end
+  def get_ratchet_tree_info(group_id_hex)
+        group_id_hex = MdkUniffi::uniffi_utf8(group_id_hex)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_ratchet_tree_info,uniffi_clone_handle(),RustBuffer.allocFromString(group_id_hex))
+    return result.consumeIntoTypeUniffiRatchetTreeInfo
+  end
   def get_relays(mls_group_id)
         mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
         
@@ -3908,6 +4574,18 @@ end
         
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_welcome,uniffi_clone_handle(),RustBuffer.allocFromString(event_id))
     return result.consumeIntoOptionalTypeWelcome
+  end
+  def group_leaf_map(group_id_hex)
+        group_id_hex = MdkUniffi::uniffi_utf8(group_id_hex)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_group_leaf_map,uniffi_clone_handle(),RustBuffer.allocFromString(group_id_hex))
+    return result.consumeIntoSequenceTypeLeafMapEntry
+  end
+  def group_required_proposals(group_id_hex)
+        group_id_hex = MdkUniffi::uniffi_utf8(group_id_hex)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_group_required_proposals,uniffi_clone_handle(),RustBuffer.allocFromString(group_id_hex))
+    return result.consumeIntoSequenceTypeMdkProposalType
   end
   def groups_needing_self_update(threshold_secs)
         threshold_secs = MdkUniffi::uniffi_in_range(threshold_secs, "u64", 0, 2**64)
@@ -3927,6 +4605,12 @@ end
       MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_merge_pending_commit,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
   end
   
+  def own_leaf_index(group_id_hex)
+        group_id_hex = MdkUniffi::uniffi_utf8(group_id_hex)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_own_leaf_index,uniffi_clone_handle(),RustBuffer.allocFromString(group_id_hex))
+    return result.to_i
+  end
   def parse_key_package(event_json)
         event_json = MdkUniffi::uniffi_utf8(event_json)
         
@@ -3941,11 +4625,35 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_parse_media_imeta_tag,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_SequenceSequencestring(imeta_tag))
     return result.consumeIntoTypeMediaReferenceRecord
   end
+  def pending_added_members_pubkeys(group_id_hex)
+        group_id_hex = MdkUniffi::uniffi_utf8(group_id_hex)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_pending_added_members_pubkeys,uniffi_clone_handle(),RustBuffer.allocFromString(group_id_hex))
+    return result.consumeIntoSequencestring
+  end
+  def pending_member_changes(group_id_hex)
+        group_id_hex = MdkUniffi::uniffi_utf8(group_id_hex)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_pending_member_changes,uniffi_clone_handle(),RustBuffer.allocFromString(group_id_hex))
+    return result.consumeIntoTypeUniffiPendingMemberChanges
+  end
+  def pending_removed_members_pubkeys(group_id_hex)
+        group_id_hex = MdkUniffi::uniffi_utf8(group_id_hex)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_pending_removed_members_pubkeys,uniffi_clone_handle(),RustBuffer.allocFromString(group_id_hex))
+    return result.consumeIntoSequencestring
+  end
   def process_message(event_json)
         event_json = MdkUniffi::uniffi_utf8(event_json)
         
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_process_message,uniffi_clone_handle(),RustBuffer.allocFromString(event_json))
     return result.consumeIntoTypeProcessMessageResult
+  end
+  def process_message_with_context(event_json)
+        event_json = MdkUniffi::uniffi_utf8(event_json)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_process_message_with_context,uniffi_clone_handle(),RustBuffer.allocFromString(event_json))
+    return result.consumeIntoTypeProcessMessageWithContextResult
   end
   def process_welcome(wrapper_event_id, rumor_event_json)
         wrapper_event_id = MdkUniffi::uniffi_utf8(wrapper_event_id)
@@ -3961,6 +4669,12 @@ end
         member_public_keys = member_public_keys.map { |v| MdkUniffi::uniffi_utf8(v) }
         RustBuffer.check_lower_Sequencestring(member_public_keys)
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_remove_members,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_Sequencestring(member_public_keys))
+    return result.consumeIntoTypeUpdateGroupResult
+  end
+  def self_demote(mls_group_id)
+        mls_group_id = MdkUniffi::uniffi_utf8(mls_group_id)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_self_demote,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
     return result.consumeIntoTypeUpdateGroupResult
   end
   def self_update(mls_group_id)
