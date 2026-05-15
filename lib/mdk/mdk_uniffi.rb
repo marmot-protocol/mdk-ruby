@@ -324,6 +324,25 @@ end
     end
   end
 
+  # The Record type MdkCapabilityUpgradeStatus.
+
+  def self.check_lower_TypeMdkCapabilityUpgradeStatus(v)
+    RustBuffer.check_lower_SequenceTypeMdkProposalUpgradeStatus(v.per_proposal)
+  end
+
+  def self.alloc_from_TypeMdkCapabilityUpgradeStatus(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeMdkCapabilityUpgradeStatus(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeMdkCapabilityUpgradeStatus
+    consumeWithStream do |stream|
+      return stream.readTypeMdkCapabilityUpgradeStatus
+    end
+  end
+
   # The Record type MdkConfig.
 
   def self.check_lower_TypeMdkConfig(v)
@@ -346,6 +365,49 @@ end
   def consumeIntoTypeMdkConfig
     consumeWithStream do |stream|
       return stream.readTypeMdkConfig
+    end
+  end
+
+  # The Record type MdkMemberCapabilities.
+
+  def self.check_lower_TypeMdkMemberCapabilities(v)
+    
+    
+    RustBuffer.check_lower_SequenceTypeMdkProposalType(v.proposals)
+    RustBuffer.check_lower_Sequenceu16(v.extensions)
+    RustBuffer.check_lower_Sequenceu16(v.ciphersuites)
+  end
+
+  def self.alloc_from_TypeMdkMemberCapabilities(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeMdkMemberCapabilities(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeMdkMemberCapabilities
+    consumeWithStream do |stream|
+      return stream.readTypeMdkMemberCapabilities
+    end
+  end
+
+  # The Record type MdkProposalUpgradeStatus.
+
+  def self.check_lower_TypeMdkProposalUpgradeStatus(v)
+    RustBuffer.check_lower_TypeMdkProposalType(v.proposal)
+    RustBuffer.check_lower_TypeMdkProposalUpgradability(v.upgradability)
+  end
+
+  def self.alloc_from_TypeMdkProposalUpgradeStatus(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeMdkProposalUpgradeStatus(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeMdkProposalUpgradeStatus
+    consumeWithStream do |stream|
+      return stream.readTypeMdkProposalUpgradeStatus
     end
   end
 
@@ -578,6 +640,35 @@ end
   def consumeIntoTypeMdkProposalType
     consumeWithStream do |stream|
       return stream.readTypeMdkProposalType
+    end
+  end
+  
+
+  # The Enum type MdkProposalUpgradability.
+
+  def self.check_lower_TypeMdkProposalUpgradability(v)
+    if v.already_required?
+      return
+    end
+    if v.available?
+      return
+    end
+    if v.blocked?
+        RustBuffer.check_lower_Sequencestring(v.blockers)
+      return
+    end
+  end
+
+  def self.alloc_from_TypeMdkProposalUpgradability(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeMdkProposalUpgradability(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeMdkProposalUpgradability
+    consumeWithStream do |stream|
+      return stream.readTypeMdkProposalUpgradability
     end
   end
   
@@ -929,6 +1020,27 @@ end
     end
   end
 
+  # The Sequence<T> type for u16.
+
+  def self.check_lower_Sequenceu16(v)
+    v.each do |item|
+      
+    end
+  end
+
+  def self.alloc_from_Sequenceu16(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_Sequenceu16(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoSequenceu16
+    consumeWithStream do |stream|
+      return stream.readSequenceu16
+    end
+  end
+
   # The Sequence<T> type for u32.
 
   def self.check_lower_Sequenceu32(v)
@@ -1010,6 +1122,48 @@ end
   def consumeIntoSequenceTypeLeafMapEntry
     consumeWithStream do |stream|
       return stream.readSequenceTypeLeafMapEntry
+    end
+  end
+
+  # The Sequence<T> type for TypeMdkMemberCapabilities.
+
+  def self.check_lower_SequenceTypeMdkMemberCapabilities(v)
+    v.each do |item|
+      RustBuffer.check_lower_TypeMdkMemberCapabilities(item)
+    end
+  end
+
+  def self.alloc_from_SequenceTypeMdkMemberCapabilities(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_SequenceTypeMdkMemberCapabilities(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoSequenceTypeMdkMemberCapabilities
+    consumeWithStream do |stream|
+      return stream.readSequenceTypeMdkMemberCapabilities
+    end
+  end
+
+  # The Sequence<T> type for TypeMdkProposalUpgradeStatus.
+
+  def self.check_lower_SequenceTypeMdkProposalUpgradeStatus(v)
+    v.each do |item|
+      RustBuffer.check_lower_TypeMdkProposalUpgradeStatus(item)
+    end
+  end
+
+  def self.alloc_from_SequenceTypeMdkProposalUpgradeStatus(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_SequenceTypeMdkProposalUpgradeStatus(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoSequenceTypeMdkProposalUpgradeStatus
+    consumeWithStream do |stream|
+      return stream.readSequenceTypeMdkProposalUpgradeStatus
     end
   end
 
@@ -1318,6 +1472,14 @@ class RustBufferStream
     )
   end
 
+  # The Record type MdkCapabilityUpgradeStatus.
+
+  def readTypeMdkCapabilityUpgradeStatus
+    MdkCapabilityUpgradeStatus.new(
+      per_proposal: readSequenceTypeMdkProposalUpgradeStatus
+    )
+  end
+
   # The Record type MdkConfig.
 
   def readTypeMdkConfig
@@ -1329,6 +1491,27 @@ class RustBufferStream
       max_past_epochs: readOptionalu32,
       epoch_snapshot_retention: readOptionalu32,
       snapshot_ttl_seconds: readOptionalu64
+    )
+  end
+
+  # The Record type MdkMemberCapabilities.
+
+  def readTypeMdkMemberCapabilities
+    MdkMemberCapabilities.new(
+      member: readString,
+      is_admin: readBool,
+      proposals: readSequenceTypeMdkProposalType,
+      extensions: readSequenceu16,
+      ciphersuites: readSequenceu16
+    )
+  end
+
+  # The Record type MdkProposalUpgradeStatus.
+
+  def readTypeMdkProposalUpgradeStatus
+    MdkProposalUpgradeStatus.new(
+      proposal: readTypeMdkProposalType,
+      upgradability: readTypeMdkProposalUpgradability
     )
   end
 
@@ -1462,6 +1645,31 @@ class RustBufferStream
     end
 
     raise InternalError, 'Unexpected variant tag for TypeMdkProposalType'
+  end
+
+  
+
+  
+  
+  # The Enum type MdkProposalUpgradability.
+
+  def readTypeMdkProposalUpgradability
+    variant = unpack_from 4, 'l>'
+    
+    if variant == 1
+        return MdkProposalUpgradability::ALREADY_REQUIRED.new
+        
+    end
+    if variant == 2
+        return MdkProposalUpgradability::AVAILABLE.new
+        
+    end
+    if variant == 3
+        return MdkProposalUpgradability::BLOCKED.new(
+            self.readSequencestring()
+        )
+    end
+    raise InternalError, 'Unexpected variant tag for TypeMdkProposalUpgradability'
   end
 
   
@@ -1743,6 +1951,22 @@ class RustBufferStream
     end
   end
 
+  # The Sequence<T> type for u16.
+
+  def readSequenceu16
+    count = unpack_from 4, 'l>'
+
+    raise InternalError, 'Unexpected negative sequence length' if count.negative?
+
+    items = []
+
+    count.times do
+      items.append readU16
+    end
+
+    items
+  end
+
   # The Sequence<T> type for u32.
 
   def readSequenceu32
@@ -1802,6 +2026,38 @@ class RustBufferStream
 
     count.times do
       items.append readTypeLeafMapEntry
+    end
+
+    items
+  end
+
+  # The Sequence<T> type for TypeMdkMemberCapabilities.
+
+  def readSequenceTypeMdkMemberCapabilities
+    count = unpack_from 4, 'l>'
+
+    raise InternalError, 'Unexpected negative sequence length' if count.negative?
+
+    items = []
+
+    count.times do
+      items.append readTypeMdkMemberCapabilities
+    end
+
+    items
+  end
+
+  # The Sequence<T> type for TypeMdkProposalUpgradeStatus.
+
+  def readSequenceTypeMdkProposalUpgradeStatus
+    count = unpack_from 4, 'l>'
+
+    raise InternalError, 'Unexpected negative sequence length' if count.negative?
+
+    items = []
+
+    count.times do
+      items.append readTypeMdkProposalUpgradeStatus
     end
 
     items
@@ -2065,6 +2321,12 @@ class RustBufferBuilder
     self.write_String(v.public_key)
   end
 
+  # The Record type MdkCapabilityUpgradeStatus.
+
+  def write_TypeMdkCapabilityUpgradeStatus(v)
+    self.write_SequenceTypeMdkProposalUpgradeStatus(v.per_proposal)
+  end
+
   # The Record type MdkConfig.
 
   def write_TypeMdkConfig(v)
@@ -2075,6 +2337,23 @@ class RustBufferBuilder
     self.write_Optionalu32(v.max_past_epochs)
     self.write_Optionalu32(v.epoch_snapshot_retention)
     self.write_Optionalu64(v.snapshot_ttl_seconds)
+  end
+
+  # The Record type MdkMemberCapabilities.
+
+  def write_TypeMdkMemberCapabilities(v)
+    self.write_String(v.member)
+    self.write_Bool(v.is_admin)
+    self.write_SequenceTypeMdkProposalType(v.proposals)
+    self.write_Sequenceu16(v.extensions)
+    self.write_Sequenceu16(v.ciphersuites)
+  end
+
+  # The Record type MdkProposalUpgradeStatus.
+
+  def write_TypeMdkProposalUpgradeStatus(v)
+    self.write_TypeMdkProposalType(v.proposal)
+    self.write_TypeMdkProposalUpgradability(v.upgradability)
   end
 
   # The Record type MediaProcessingOptionsInput.
@@ -2178,6 +2457,22 @@ class RustBufferBuilder
 
   def write_TypeMdkProposalType(v)
     pack_into(4, 'l>', v)
+ end
+   
+
+  # The Enum type MdkProposalUpgradability.
+
+  def write_TypeMdkProposalUpgradability(v)
+    if v.already_required?
+      pack_into(4, 'l>', 1)
+    end
+    if v.available?
+      pack_into(4, 'l>', 2)
+    end
+    if v.blocked?
+      pack_into(4, 'l>', 3)
+      self.write_Sequencestring(v.blockers)
+    end
  end
    
 
@@ -2375,6 +2670,16 @@ class RustBufferBuilder
     end
   end
 
+  # The Sequence<T> type for u16.
+
+  def write_Sequenceu16(items)
+    pack_into(4, 'l>', items.size)
+
+    items.each do |item|
+      self.write_U16(item)
+    end
+  end
+
   # The Sequence<T> type for u32.
 
   def write_Sequenceu32(items)
@@ -2412,6 +2717,26 @@ class RustBufferBuilder
 
     items.each do |item|
       self.write_TypeLeafMapEntry(item)
+    end
+  end
+
+  # The Sequence<T> type for TypeMdkMemberCapabilities.
+
+  def write_SequenceTypeMdkMemberCapabilities(items)
+    pack_into(4, 'l>', items.size)
+
+    items.each do |item|
+      self.write_TypeMdkMemberCapabilities(item)
+    end
+  end
+
+  # The Sequence<T> type for TypeMdkProposalUpgradeStatus.
+
+  def write_SequenceTypeMdkProposalUpgradeStatus(items)
+    pack_into(4, 'l>', items.size)
+
+    items.each do |item|
+      self.write_TypeMdkProposalUpgradeStatus(item)
     end
   end
 
@@ -2513,6 +2838,7 @@ CALL_PANIC = 2
 
 
 
+
 module MdkUniffiError
   class Storage < StandardError
     def initialize()
@@ -2560,6 +2886,7 @@ end
 
 # Map error modules to the RustBuffer method name that reads them
 ERROR_MODULE_TO_READER_METHOD = {
+
 
 
   MdkUniffiError => :readTypeMdkUniffiError,
@@ -2724,7 +3051,13 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_get_welcome,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_group_capability_upgrade_status,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_group_leaf_map,
+    [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_group_member_capabilities,
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_group_required_proposals,
@@ -2779,6 +3112,9 @@ module UniFFILib
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     :void
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_update_group_data,
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    RustBuffer.by_value
+  attach_function :uniffi_mdk_uniffi_fn_method_mdk_upgrade_group_capabilities,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_func_decrypt_group_image,
@@ -2919,7 +3255,13 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_get_welcome,
     [RustCallStatus.by_ref],
     :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_group_capability_upgrade_status,
+    [RustCallStatus.by_ref],
+    :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_group_leaf_map,
+    [RustCallStatus.by_ref],
+    :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_group_member_capabilities,
     [RustCallStatus.by_ref],
     :uint16
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_group_required_proposals,
@@ -2976,6 +3318,9 @@ module UniFFILib
   attach_function :uniffi_mdk_uniffi_checksum_method_mdk_update_group_data,
     [RustCallStatus.by_ref],
     :uint16
+  attach_function :uniffi_mdk_uniffi_checksum_method_mdk_upgrade_group_capabilities,
+    [RustCallStatus.by_ref],
+    :uint16
   attach_function :ffi_mdk_uniffi_uniffi_contract_version,
     [RustCallStatus.by_ref],
     :uint32
@@ -2991,6 +3336,131 @@ end
 class MdkProposalType
   SELF_REMOVE = 1
   UNKNOWN = 2
+  
+end
+
+
+  
+  
+  
+
+class MdkProposalUpgradability
+  def initialize
+    raise RuntimeError, 'MdkProposalUpgradability cannot be instantiated directly'
+  end
+
+  # Each enum variant is a nested class of the enum itself.
+  class ALREADY_REQUIRED
+    
+    def initialize()
+      
+      
+    end
+
+    def to_s
+      "MdkProposalUpgradability::ALREADY_REQUIRED()"
+    end
+
+    def ==(other)
+      if !other.already_required?
+        return false
+      end
+
+      true
+    end
+
+    # For each variant, we have an `NAME?` method for easily checking
+    # whether an instance is that variant.
+    
+    def already_required?
+      instance_of? MdkProposalUpgradability::ALREADY_REQUIRED
+    end
+    
+    def available?
+      instance_of? MdkProposalUpgradability::AVAILABLE
+    end
+    
+    def blocked?
+      instance_of? MdkProposalUpgradability::BLOCKED
+    end
+    
+  end
+  class AVAILABLE
+    
+    def initialize()
+      
+      
+    end
+
+    def to_s
+      "MdkProposalUpgradability::AVAILABLE()"
+    end
+
+    def ==(other)
+      if !other.available?
+        return false
+      end
+
+      true
+    end
+
+    # For each variant, we have an `NAME?` method for easily checking
+    # whether an instance is that variant.
+    
+    def already_required?
+      instance_of? MdkProposalUpgradability::ALREADY_REQUIRED
+    end
+    
+    def available?
+      instance_of? MdkProposalUpgradability::AVAILABLE
+    end
+    
+    def blocked?
+      instance_of? MdkProposalUpgradability::BLOCKED
+    end
+    
+  end
+  class BLOCKED
+    
+    attr_reader :blockers
+    
+    def initialize(blockers)
+      
+      @blockers = blockers
+      
+    end
+
+    def to_s
+      "MdkProposalUpgradability::BLOCKED(blockers=#{@blockers})"
+    end
+
+    def ==(other)
+      if !other.blocked?
+        return false
+      end
+      if @blockers != other.blockers
+        return false
+      end
+
+      true
+    end
+
+    # For each variant, we have an `NAME?` method for easily checking
+    # whether an instance is that variant.
+    
+    def already_required?
+      instance_of? MdkProposalUpgradability::ALREADY_REQUIRED
+    end
+    
+    def available?
+      instance_of? MdkProposalUpgradability::AVAILABLE
+    end
+    
+    def blocked?
+      instance_of? MdkProposalUpgradability::BLOCKED
+    end
+    
+  end
   
 end
 
@@ -3817,6 +4287,23 @@ class LeafMapEntry
   end
 end
   
+  # Record type MdkCapabilityUpgradeStatus
+class MdkCapabilityUpgradeStatus
+  attr_reader :per_proposal
+
+  def initialize(per_proposal:)
+    @per_proposal = per_proposal
+  end
+
+  def ==(other)
+    if @per_proposal != other.per_proposal
+      return false
+    end
+
+    true
+  end
+end
+  
   # Record type MdkConfig
 class MdkConfig
   attr_reader :max_event_age_secs, :max_future_skew_secs, :out_of_order_tolerance, :maximum_forward_distance, :max_past_epochs, :epoch_snapshot_retention, :snapshot_ttl_seconds
@@ -3851,6 +4338,60 @@ class MdkConfig
       return false
     end
     if @snapshot_ttl_seconds != other.snapshot_ttl_seconds
+      return false
+    end
+
+    true
+  end
+end
+  
+  # Record type MdkMemberCapabilities
+class MdkMemberCapabilities
+  attr_reader :member, :is_admin, :proposals, :extensions, :ciphersuites
+
+  def initialize(member:, is_admin:, proposals:, extensions:, ciphersuites:)
+    @member = member
+    @is_admin = is_admin
+    @proposals = proposals
+    @extensions = extensions
+    @ciphersuites = ciphersuites
+  end
+
+  def ==(other)
+    if @member != other.member
+      return false
+    end
+    if @is_admin != other.is_admin
+      return false
+    end
+    if @proposals != other.proposals
+      return false
+    end
+    if @extensions != other.extensions
+      return false
+    end
+    if @ciphersuites != other.ciphersuites
+      return false
+    end
+
+    true
+  end
+end
+  
+  # Record type MdkProposalUpgradeStatus
+class MdkProposalUpgradeStatus
+  attr_reader :proposal, :upgradability
+
+  def initialize(proposal:, upgradability:)
+    @proposal = proposal
+    @upgradability = upgradability
+  end
+
+  def ==(other)
+    if @proposal != other.proposal
+      return false
+    end
+    if @upgradability != other.upgradability
       return false
     end
 
@@ -4575,11 +5116,23 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_get_welcome,uniffi_clone_handle(),RustBuffer.allocFromString(event_id))
     return result.consumeIntoOptionalTypeWelcome
   end
+  def group_capability_upgrade_status(group_id_hex)
+        group_id_hex = MdkUniffi::uniffi_utf8(group_id_hex)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_group_capability_upgrade_status,uniffi_clone_handle(),RustBuffer.allocFromString(group_id_hex))
+    return result.consumeIntoTypeMdkCapabilityUpgradeStatus
+  end
   def group_leaf_map(group_id_hex)
         group_id_hex = MdkUniffi::uniffi_utf8(group_id_hex)
         
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_group_leaf_map,uniffi_clone_handle(),RustBuffer.allocFromString(group_id_hex))
     return result.consumeIntoSequenceTypeLeafMapEntry
+  end
+  def group_member_capabilities(group_id_hex)
+        group_id_hex = MdkUniffi::uniffi_utf8(group_id_hex)
+        
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_group_member_capabilities,uniffi_clone_handle(),RustBuffer.allocFromString(group_id_hex))
+    return result.consumeIntoSequenceTypeMdkMemberCapabilities
   end
   def group_required_proposals(group_id_hex)
         group_id_hex = MdkUniffi::uniffi_utf8(group_id_hex)
@@ -4695,6 +5248,14 @@ end
         update = update
         RustBuffer.check_lower_TypeGroupDataUpdate(update)
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_update_group_data,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id),RustBuffer.alloc_from_TypeGroupDataUpdate(update))
+    return result.consumeIntoTypeUpdateGroupResult
+  end
+  def upgrade_group_capabilities(group_id_hex, proposals_to_add)
+        group_id_hex = MdkUniffi::uniffi_utf8(group_id_hex)
+        
+        proposals_to_add = proposals_to_add
+        RustBuffer.check_lower_SequenceTypeMdkProposalType(proposals_to_add)
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_upgrade_group_capabilities,uniffi_clone_handle(),RustBuffer.allocFromString(group_id_hex),RustBuffer.alloc_from_SequenceTypeMdkProposalType(proposals_to_add))
     return result.consumeIntoTypeUpdateGroupResult
   end
   
