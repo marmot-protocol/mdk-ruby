@@ -159,6 +159,8 @@ end
     RustBuffer.check_lower_OptionalSequenceu32(v.dimensions)
     RustBuffer.check_lower_Optionalstring(v.blurhash)
     RustBuffer.check_lower_Optionalstring(v.thumbhash)
+    RustBuffer.check_lower_Optionalu64(v.duration_ms)
+    RustBuffer.check_lower_Optionalbytes(v.waveform)
     
   end
 
@@ -278,6 +280,26 @@ end
   def consumeIntoTypeImageDimensions
     consumeWithStream do |stream|
       return stream.readTypeImageDimensions
+    end
+  end
+
+  # The Record type KeyPackageOptions.
+
+  def self.check_lower_TypeKeyPackageOptions(v)
+    
+    RustBuffer.check_lower_Optionalstring(v.existing_d_tag)
+  end
+
+  def self.alloc_from_TypeKeyPackageOptions(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_TypeKeyPackageOptions(v)
+      return builder.finalize
+    end
+  end
+
+  def consumeIntoTypeKeyPackageOptions
+    consumeWithStream do |stream|
+      return stream.readTypeKeyPackageOptions
     end
   end
 
@@ -443,6 +465,8 @@ end
     
     
     RustBuffer.check_lower_OptionalSequenceu32(v.dimensions)
+    RustBuffer.check_lower_Optionalu64(v.duration_ms)
+    RustBuffer.check_lower_Optionalbytes(v.waveform)
     
     
   end
@@ -1385,6 +1409,8 @@ class RustBufferStream
       dimensions: readOptionalSequenceu32,
       blurhash: readOptionalstring,
       thumbhash: readOptionalstring,
+      duration_ms: readOptionalu64,
+      waveform: readOptionalbytes,
       nonce: readBytes
     )
   end
@@ -1448,6 +1474,15 @@ class RustBufferStream
     ImageDimensions.new(
       width: readU32,
       height: readU32
+    )
+  end
+
+  # The Record type KeyPackageOptions.
+
+  def readTypeKeyPackageOptions
+    KeyPackageOptions.new(
+      protected: readBool,
+      existing_d_tag: readOptionalstring
     )
   end
 
@@ -1537,6 +1572,8 @@ class RustBufferStream
       mime_type: readString,
       filename: readString,
       dimensions: readOptionalSequenceu32,
+      duration_ms: readOptionalu64,
+      waveform: readOptionalbytes,
       scheme_version: readString,
       nonce: readBytes
     )
@@ -2247,6 +2284,8 @@ class RustBufferBuilder
     self.write_OptionalSequenceu32(v.dimensions)
     self.write_Optionalstring(v.blurhash)
     self.write_Optionalstring(v.thumbhash)
+    self.write_Optionalu64(v.duration_ms)
+    self.write_Optionalbytes(v.waveform)
     self.write_Bytes(v.nonce)
   end
 
@@ -2302,6 +2341,13 @@ class RustBufferBuilder
   def write_TypeImageDimensions(v)
     self.write_U32(v.width)
     self.write_U32(v.height)
+  end
+
+  # The Record type KeyPackageOptions.
+
+  def write_TypeKeyPackageOptions(v)
+    self.write_Bool(v.protected)
+    self.write_Optionalstring(v.existing_d_tag)
   end
 
   # The Record type KeyPackageResult.
@@ -2375,6 +2421,8 @@ class RustBufferBuilder
     self.write_String(v.mime_type)
     self.write_String(v.filename)
     self.write_OptionalSequenceu32(v.dimensions)
+    self.write_Optionalu64(v.duration_ms)
+    self.write_Optionalbytes(v.waveform)
     self.write_String(v.scheme_version)
     self.write_Bytes(v.nonce)
   end
@@ -2986,7 +3034,7 @@ module UniFFILib
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_key_package_for_event_with_options,
-    [:uint64, RustBuffer.by_value, RustBuffer.by_value, :int8, RustCallStatus.by_ref],
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_media_imeta_tag,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
@@ -3990,9 +4038,9 @@ end
   
   # Record type EncryptedMediaUploadResult
 class EncryptedMediaUploadResult
-  attr_reader :encrypted_data, :original_hash, :encrypted_hash, :mime_type, :filename, :original_size, :encrypted_size, :dimensions, :blurhash, :thumbhash, :nonce
+  attr_reader :encrypted_data, :original_hash, :encrypted_hash, :mime_type, :filename, :original_size, :encrypted_size, :dimensions, :blurhash, :thumbhash, :duration_ms, :waveform, :nonce
 
-  def initialize(encrypted_data:, original_hash:, encrypted_hash:, mime_type:, filename:, original_size:, encrypted_size:, dimensions:, blurhash:, thumbhash:, nonce:)
+  def initialize(encrypted_data:, original_hash:, encrypted_hash:, mime_type:, filename:, original_size:, encrypted_size:, dimensions:, blurhash:, thumbhash:, duration_ms:, waveform:, nonce:)
     @encrypted_data = encrypted_data
     @original_hash = original_hash
     @encrypted_hash = encrypted_hash
@@ -4003,6 +4051,8 @@ class EncryptedMediaUploadResult
     @dimensions = dimensions
     @blurhash = blurhash
     @thumbhash = thumbhash
+    @duration_ms = duration_ms
+    @waveform = waveform
     @nonce = nonce
   end
 
@@ -4035,6 +4085,12 @@ class EncryptedMediaUploadResult
       return false
     end
     if @thumbhash != other.thumbhash
+      return false
+    end
+    if @duration_ms != other.duration_ms
+      return false
+    end
+    if @waveform != other.waveform
       return false
     end
     if @nonce != other.nonce
@@ -4226,6 +4282,27 @@ class ImageDimensions
       return false
     end
     if @height != other.height
+      return false
+    end
+
+    true
+  end
+end
+  
+  # Record type KeyPackageOptions
+class KeyPackageOptions
+  attr_reader :protected, :existing_d_tag
+
+  def initialize(protected: false, existing_d_tag: nil)
+    @protected = protected
+    @existing_d_tag = existing_d_tag
+  end
+
+  def ==(other)
+    if @protected != other.protected
+      return false
+    end
+    if @existing_d_tag != other.existing_d_tag
       return false
     end
 
@@ -4438,14 +4515,16 @@ end
   
   # Record type MediaReferenceRecord
 class MediaReferenceRecord
-  attr_reader :url, :original_hash, :mime_type, :filename, :dimensions, :scheme_version, :nonce
+  attr_reader :url, :original_hash, :mime_type, :filename, :dimensions, :duration_ms, :waveform, :scheme_version, :nonce
 
-  def initialize(url:, original_hash:, mime_type:, filename:, dimensions:, scheme_version:, nonce:)
+  def initialize(url:, original_hash:, mime_type:, filename:, dimensions:, duration_ms:, waveform:, scheme_version:, nonce:)
     @url = url
     @original_hash = original_hash
     @mime_type = mime_type
     @filename = filename
     @dimensions = dimensions
+    @duration_ms = duration_ms
+    @waveform = waveform
     @scheme_version = scheme_version
     @nonce = nonce
   end
@@ -4464,6 +4543,12 @@ class MediaReferenceRecord
       return false
     end
     if @dimensions != other.dimensions
+      return false
+    end
+    if @duration_ms != other.duration_ms
+      return false
+    end
+    if @waveform != other.waveform
       return false
     end
     if @scheme_version != other.scheme_version
@@ -4938,14 +5023,14 @@ end
     result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_key_package_for_event,uniffi_clone_handle(),RustBuffer.allocFromString(public_key),RustBuffer.alloc_from_Sequencestring(relays))
     return result.consumeIntoTypeKeyPackageResult
   end
-  def create_key_package_for_event_with_options(public_key, relays, protected)
+  def create_key_package_for_event_with_options(public_key, relays, options)
         public_key = MdkUniffi::uniffi_utf8(public_key)
         
         relays = relays.map { |v| MdkUniffi::uniffi_utf8(v) }
         RustBuffer.check_lower_Sequencestring(relays)
-        protected = protected ? true : false
-        
-    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_key_package_for_event_with_options,uniffi_clone_handle(),RustBuffer.allocFromString(public_key),RustBuffer.alloc_from_Sequencestring(relays),(protected ? 1 : 0))
+        options = options
+        RustBuffer.check_lower_TypeKeyPackageOptions(options)
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_key_package_for_event_with_options,uniffi_clone_handle(),RustBuffer.allocFromString(public_key),RustBuffer.alloc_from_Sequencestring(relays),RustBuffer.alloc_from_TypeKeyPackageOptions(options))
     return result.consumeIntoTypeKeyPackageResult
   end
   def create_media_imeta_tag(mls_group_id, upload, uploaded_url)
