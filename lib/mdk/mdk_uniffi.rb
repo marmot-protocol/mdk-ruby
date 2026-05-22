@@ -194,6 +194,7 @@ end
     
     
     
+    RustBuffer.check_lower_Optionalu64(v.disappearing_message_secs)
   end
 
   def self.alloc_from_TypeGroup(v)
@@ -219,6 +220,7 @@ end
     RustBuffer.check_lower_OptionalOptionalbytes(v.image_nonce)
     RustBuffer.check_lower_OptionalSequencestring(v.relays)
     RustBuffer.check_lower_OptionalSequencestring(v.admins)
+    RustBuffer.check_lower_OptionalOptionalu64(v.disappearing_message_secs)
   end
 
   def self.alloc_from_TypeGroupDataUpdate(v)
@@ -960,6 +962,27 @@ end
     end
   end
 
+  # The Optional<T> type for Optionalu64.
+
+  def self.check_lower_OptionalOptionalu64(v)
+    if not v.nil?
+      RustBuffer.check_lower_Optionalu64(v)
+    end
+  end
+
+  def self.alloc_from_OptionalOptionalu64(v)
+    RustBuffer.allocWithBuilder do |builder|
+      builder.write_OptionalOptionalu64(v)
+      return builder.finalize()
+    end
+  end
+
+  def consumeIntoOptionalOptionalu64
+    consumeWithStream do |stream|
+      return stream.readOptionalOptionalu64
+    end
+  end
+
   # The Optional<T> type for Optionalbytes.
 
   def self.check_lower_OptionalOptionalbytes(v)
@@ -1432,7 +1455,8 @@ class RustBufferStream
       last_message_processed_at: readOptionalu64,
       epoch: readU64,
       state: readString,
-      self_update_state: readString
+      self_update_state: readString,
+      disappearing_message_secs: readOptionalu64
     )
   end
 
@@ -1446,7 +1470,8 @@ class RustBufferStream
       image_key: readOptionalOptionalbytes,
       image_nonce: readOptionalOptionalbytes,
       relays: readOptionalSequencestring,
-      admins: readOptionalSequencestring
+      admins: readOptionalSequencestring,
+      disappearing_message_secs: readOptionalOptionalu64
     )
   end
 
@@ -1932,6 +1957,20 @@ class RustBufferStream
     end
   end
 
+  # The Optional<T> type for Optionalu64.
+
+  def readOptionalOptionalu64
+    flag = unpack_from 1, 'c'
+
+    if flag == 0
+      return nil
+    elsif flag == 1
+      return readOptionalu64
+    else
+      raise InternalError, 'Unexpected flag byte for OptionalOptionalu64'
+    end
+  end
+
   # The Optional<T> type for Optionalbytes.
 
   def readOptionalOptionalbytes
@@ -2306,6 +2345,7 @@ class RustBufferBuilder
     self.write_U64(v.epoch)
     self.write_String(v.state)
     self.write_String(v.self_update_state)
+    self.write_Optionalu64(v.disappearing_message_secs)
   end
 
   # The Record type GroupDataUpdate.
@@ -2318,6 +2358,7 @@ class RustBufferBuilder
     self.write_OptionalOptionalbytes(v.image_nonce)
     self.write_OptionalSequencestring(v.relays)
     self.write_OptionalSequencestring(v.admins)
+    self.write_OptionalOptionalu64(v.disappearing_message_secs)
   end
 
   # The Record type GroupImageUpload.
@@ -2671,6 +2712,17 @@ class RustBufferBuilder
     else
       pack_into(1, 'c', 1)
       self.write_TypeWelcome(v)
+    end
+  end
+
+  # The Optional<T> type for Optionalu64.
+
+  def write_OptionalOptionalu64(v)
+    if v.nil?
+      pack_into(1, 'c', 0)
+    else
+      pack_into(1, 'c', 1)
+      self.write_Optionalu64(v)
     end
   end
 
@@ -3028,7 +3080,7 @@ module UniFFILib
     [:uint64, RustBuffer.by_value, RustCallStatus.by_ref],
     :void
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_group,
-    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
+    [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
     RustBuffer.by_value
   attach_function :uniffi_mdk_uniffi_fn_method_mdk_create_key_package_for_event,
     [:uint64, RustBuffer.by_value, RustBuffer.by_value, RustCallStatus.by_ref],
@@ -4103,9 +4155,9 @@ end
   
   # Record type Group
 class Group
-  attr_reader :mls_group_id, :nostr_group_id, :name, :description, :image_hash, :image_key, :image_nonce, :admin_pubkeys, :last_message_id, :last_message_at, :last_message_processed_at, :epoch, :state, :self_update_state
+  attr_reader :mls_group_id, :nostr_group_id, :name, :description, :image_hash, :image_key, :image_nonce, :admin_pubkeys, :last_message_id, :last_message_at, :last_message_processed_at, :epoch, :state, :self_update_state, :disappearing_message_secs
 
-  def initialize(mls_group_id:, nostr_group_id:, name:, description:, image_hash:, image_key:, image_nonce:, admin_pubkeys:, last_message_id:, last_message_at:, last_message_processed_at:, epoch:, state:, self_update_state:)
+  def initialize(mls_group_id:, nostr_group_id:, name:, description:, image_hash:, image_key:, image_nonce:, admin_pubkeys:, last_message_id:, last_message_at:, last_message_processed_at:, epoch:, state:, self_update_state:, disappearing_message_secs:)
     @mls_group_id = mls_group_id
     @nostr_group_id = nostr_group_id
     @name = name
@@ -4120,6 +4172,7 @@ class Group
     @epoch = epoch
     @state = state
     @self_update_state = self_update_state
+    @disappearing_message_secs = disappearing_message_secs
   end
 
   def ==(other)
@@ -4165,6 +4218,9 @@ class Group
     if @self_update_state != other.self_update_state
       return false
     end
+    if @disappearing_message_secs != other.disappearing_message_secs
+      return false
+    end
 
     true
   end
@@ -4172,9 +4228,9 @@ end
   
   # Record type GroupDataUpdate
 class GroupDataUpdate
-  attr_reader :name, :description, :image_hash, :image_key, :image_nonce, :relays, :admins
+  attr_reader :name, :description, :image_hash, :image_key, :image_nonce, :relays, :admins, :disappearing_message_secs
 
-  def initialize(name:, description:, image_hash:, image_key:, image_nonce:, relays:, admins:)
+  def initialize(name:, description:, image_hash:, image_key:, image_nonce:, relays:, admins:, disappearing_message_secs:)
     @name = name
     @description = description
     @image_hash = image_hash
@@ -4182,6 +4238,7 @@ class GroupDataUpdate
     @image_nonce = image_nonce
     @relays = relays
     @admins = admins
+    @disappearing_message_secs = disappearing_message_secs
   end
 
   def ==(other)
@@ -4204,6 +4261,9 @@ class GroupDataUpdate
       return false
     end
     if @admins != other.admins
+      return false
+    end
+    if @disappearing_message_secs != other.disappearing_message_secs
       return false
     end
 
@@ -4999,7 +5059,7 @@ end
       MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_clear_pending_commit,uniffi_clone_handle(),RustBuffer.allocFromString(mls_group_id))
   end
   
-  def create_group(creator_public_key, member_key_package_events_json, name, description, relays, admins)
+  def create_group(creator_public_key, member_key_package_events_json, name, description, relays, admins, disappearing_message_secs)
         creator_public_key = MdkUniffi::uniffi_utf8(creator_public_key)
         
         member_key_package_events_json = member_key_package_events_json.map { |v| MdkUniffi::uniffi_utf8(v) }
@@ -5012,7 +5072,9 @@ end
         RustBuffer.check_lower_Sequencestring(relays)
         admins = admins.map { |v| MdkUniffi::uniffi_utf8(v) }
         RustBuffer.check_lower_Sequencestring(admins)
-    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_group,uniffi_clone_handle(),RustBuffer.allocFromString(creator_public_key),RustBuffer.alloc_from_Sequencestring(member_key_package_events_json),RustBuffer.allocFromString(name),RustBuffer.allocFromString(description),RustBuffer.alloc_from_Sequencestring(relays),RustBuffer.alloc_from_Sequencestring(admins))
+        disappearing_message_secs = (disappearing_message_secs ? MdkUniffi::uniffi_in_range(disappearing_message_secs, "u64", 0, 2**64) : nil)
+        RustBuffer.check_lower_Optionalu64(disappearing_message_secs)
+    result = MdkUniffi.rust_call_with_error(MdkUniffiError,:uniffi_mdk_uniffi_fn_method_mdk_create_group,uniffi_clone_handle(),RustBuffer.allocFromString(creator_public_key),RustBuffer.alloc_from_Sequencestring(member_key_package_events_json),RustBuffer.allocFromString(name),RustBuffer.allocFromString(description),RustBuffer.alloc_from_Sequencestring(relays),RustBuffer.alloc_from_Sequencestring(admins),RustBuffer.alloc_from_Optionalu64(disappearing_message_secs))
     return result.consumeIntoTypeCreateGroupResult
   end
   def create_key_package_for_event(public_key, relays)
