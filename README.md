@@ -1,3 +1,6 @@
+> [!WARNING]
+> This repository is obsolete and is no longer updated.
+
 > [!NOTE]
 > This is a generic documentation, [read Ruby-specific docs](docs.md).
 
